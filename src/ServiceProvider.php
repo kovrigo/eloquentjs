@@ -14,7 +14,7 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->app->bind('eloquentjs.applicator', function ($app) {
-            return new Applicator($app['request']->input('query'));
+            return new Applicator($app['request']->input('query', '[]'));
         });
     }
 }
