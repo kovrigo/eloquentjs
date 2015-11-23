@@ -78,7 +78,7 @@ class Applicator
      * @param string $method
      * @param array $args
      */
-    protected function applyMethod($builder, $method, $args)
+    protected function applyMethod($builder, $method, array $args)
     {
         if ($this->isAllowed($method, $args)) {
             call_user_func_array([$builder, $method], $args);
