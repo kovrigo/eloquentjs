@@ -7,9 +7,9 @@ use InvalidArgumentException;
 class Applicator
 {
     /**
-     * @var null|string
+     * @var string
      */
-    protected $defaultStack;
+    protected $defaultStack = '[]';
 
     /**
      * @var array
@@ -28,6 +28,7 @@ class Applicator
         'having', 'orHaving',
         'orderBy', 'latest', 'oldest',
         'offset', 'skip', 'limit', 'take', 'forPage',
+        'scope',
     ];
 
     /**
@@ -37,7 +38,9 @@ class Applicator
      */
     public function __construct($defaultStack = null)
     {
-        $this->defaultStack = $defaultStack;
+        if ($defaultStack) {
+            $this->defaultStack = $defaultStack;
+        }
     }
 
     /**
