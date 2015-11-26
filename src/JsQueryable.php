@@ -2,6 +2,7 @@
 
 namespace Parsnick\EloquentJs;
 
+use DateTime;
 use InvalidArgumentException;
 
 trait JsQueryable
@@ -10,6 +11,11 @@ trait JsQueryable
      * @var Applicator
      */
     static protected $jsQueryApplicator;
+
+    /**
+     * @var bool
+     */
+    static protected $overrideDates = false;
 
     /**
      * Boot the trait.
@@ -36,6 +42,8 @@ trait JsQueryable
     public function scopeApplyJsQuery($query, $stack = null)
     {
         static::$jsQueryApplicator->apply($query, $stack);
+
+        static::$overrideDates = true;
     }
 
     /**
@@ -60,5 +68,26 @@ trait JsQueryable
 
         array_unshift($parameters, $query);
         call_user_func_array([$this, $methodName], $parameters);
+    }
+
+    /**
+     * Override the date serializer.
+     *
+     * When we're sending data back to our javascript, we want
+     * dates in a predictable js-friendly format. At all other times,
+     * defer back to the parent method.
+     *
+     * This seems like an ugly hack. :(
+     *
+     * @param DateTime $date
+     * @return string
+     */
+    protected function serializeDate(DateTime $date)
+    {
+        if (static::$overrideDates) {
+            return $date->toIso8601String();
+        }
+
+        return parent::serializeDate($date);
     }
 }
