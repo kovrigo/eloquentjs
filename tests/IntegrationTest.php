@@ -2,10 +2,12 @@
 
 namespace Parsnick\EloquentJs\Tests;
 
+use Faker\Factory;
+use Illuminate\Database\Eloquent\Collection;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use Parsnick\EloquentJs\JsQueryable;
-use Parsnick\EloquentJs\ServiceProvider;
+use Parsnick\EloquentJs\Model\EloquentJsQueries;
+use Parsnick\EloquentJs\EloquentJsServiceProvider;
 
 class IntegrationTest extends TestCase
 {
@@ -37,7 +39,7 @@ class IntegrationTest extends TestCase
      */
     protected function getPackageProviders($app)
     {
-        return [ServiceProvider::class];
+        return [EloquentJsServiceProvider::class];
     }
 
     /**
@@ -52,37 +54,83 @@ class IntegrationTest extends TestCase
             '--realpath' => realpath(__DIR__ . '/migrations'),
         ]);
 
-        Post::create([
-            'title'   => 'Test Post 1',
-            'body'    => 'This is a hidden post.',
-            'visible' => 0,
-        ]);
+        $faker = Factory::create();
+        $faker->seed(1234);
 
-        Post::create([
-            'title'   => 'Test Post 2',
-            'body'    => 'This is a visible post.',
-            'visible' => 1,
-        ]);
-
-        Post::create([
-            'title'   => 'Test Post 3',
-            'body'    => 'This is also a visible post.',
-            'visible' => 1,
-        ]);
+        for ($i = 0; $i < 100; $i++) {
+            Post::create([
+                'title'      => $faker->sentence,
+                'body'       => $faker->text,
+                'visible'    => $faker->boolean(75),
+                'created_at' => $faker->dateTimeBetween('-30 years', 'now'),
+            ]);
+        }
     }
 
     /** @test */
     public function it_applies_a_json_encoded_query_to_the_eloquent_model()
     {
-        $result = Post::applyJsQuery('[["where", ["visible", "=", "1"]],["orderBy", ["id", "desc"]]]')->get();
+        $query = json_encode([
+            ['where', ['visible', '=', '1']],
+            ['orderBy', ['id', 'desc']],
+        ]);
+        $this->assertSameResult(
+            Post::useEloquentJs($query)->get(),
+            Post::where('visible', '=', 1)->orderBy('id', 'desc')->get()
+        );
 
-        $this->assertEquals($result->first()->title, 'Test Post 3');
+        $query = json_encode([
+            ['latest', []],
+            ['whereDay', ['created_at', '<', '20']],
+            ['limit', [5]],
+        ]);
+        $this->assertSameResult(
+            Post::useEloquentJs($query)->get(),
+            Post::latest()->whereDay('created_at', '<', 20)->limit(5)->get()
+        );
+
+        $query = json_encode([
+            ['distinct', []],
+            ['groupBy', ['visible']],
+        ]);
+        $this->assertSameResult(
+            Post::useEloquentJs($query)->get(),
+            Post::distinct()->groupBy('visible')->get()
+        );
+    }
+
+    /** @test */
+    public function it_restricts_the_methods_you_can_use()
+    {
+        $query = json_encode([
+            ['selectRaw', ['(SELECT arbitraryColumn FROM anyTable LIMIT 1']],
+        ]);
+
+        $this->setExpectedException('InvalidArgumentException');
+
+        Post::useEloquentJs($query);
+    }
+
+    /**
+     * Assert two query results (either models or collections) are identical.
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertSameResult($expected, $actual, $message = 'Result not the same')
+    {
+        if ($expected instanceof Collection) {
+            return $this->assertEmpty($expected->diff($actual)->all());
+        }
+
+        $this->assertEquals($expected->getKey(), $actual->getKey(), $message);
     }
 }
 
 class Post extends Model
 {
-    use JsQueryable;
+    use EloquentJsQueries;
 
     protected $guarded = [];
 }

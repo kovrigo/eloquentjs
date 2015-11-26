@@ -1,47 +1,34 @@
 <?php
 
-namespace Parsnick\EloquentJs;
+namespace Parsnick\EloquentJs\Model;
 
 use DateTime;
 use InvalidArgumentException;
+use Parsnick\EloquentJs\Events\EloquentJsWasCalled;
+use UnexpectedValueException;
 
-trait JsQueryable
+trait EloquentJsQueries
 {
-    /**
-     * @var Applicator
-     */
-    static protected $jsQueryApplicator;
-
     /**
      * @var bool
      */
     static protected $overrideDates = false;
 
     /**
-     * Boot the trait.
+     * Scope to results that satisfy the string-encoded list of query methods described by $stack.
      *
-     * Fetches the default eloquentjs query applicator - this is
-     * the class that translates the JSON-encoded list of query methods
-     * to an Eloquent query builder.
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $stack
      */
-    public static function bootJsQueryable()
+    public function scopeUseEloquentJs($query, $stack = null)
     {
-        static::$jsQueryApplicator = app('eloquentjs.applicator');
-    }
+        if ( ! static::$dispatcher) {
+            throw new UnexpectedValueException(
+                'Event dispatcher not found. Install illuminate/events package for EloquentJS usage without Laravel.'
+            );
+        }
 
-    /**
-     * Apply the given $stack to the $query object.
-     *
-     * $stack is a JSON-encoded list of query methods to call.
-     * If omitted, the "query" input from the current request is used.
-     * See the ServiceProvider.
-     *
-     * @param Builder $query
-     * @param null|string $stack
-     */
-    public function scopeApplyJsQuery($query, $stack = null)
-    {
-        static::$jsQueryApplicator->apply($query, $stack);
+        static::$dispatcher->fire(new EloquentJsWasCalled($query, $stack));
 
         static::$overrideDates = true;
     }
@@ -51,10 +38,10 @@ trait JsQueryable
      *
      * Yes, this is indeed a scope for calling another scope method.
      * While there are other ways we could support scopes, this has
-     * the benefit of requiring no special treatment in our Applicator
+     * the benefit of requiring no special treatment in our BaseQueryTranslator
      * - no different from how we handle `where`, `orderBy`, etc.
      *
-     * @param Builder $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $name
      * @param array $parameters
      */
@@ -63,7 +50,7 @@ trait JsQueryable
         $methodName = 'scope'.ucfirst($name);
 
         if ( ! method_exists($this, $methodName)) {
-            throw new InvalidArgumentException("No such scope: $name");
+            throw new InvalidArgumentException("No such scope [$name]");
         }
 
         array_unshift($parameters, $query);
@@ -77,7 +64,7 @@ trait JsQueryable
      * dates in a predictable js-friendly format. At all other times,
      * defer back to the parent method.
      *
-     * This seems like an ugly hack. :(
+     * This seems like a rather ugly hack. :(
      *
      * @param DateTime $date
      * @return string
