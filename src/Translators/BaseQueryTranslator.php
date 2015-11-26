@@ -1,6 +1,6 @@
 <?php
 
-namespace Parsnick\EloquentJs\Translators;
+namespace EloquentJs\Translators;
 
 use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;

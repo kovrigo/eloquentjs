@@ -1,6 +1,6 @@
 <?php
 
-namespace Parsnick\EloquentJs\Events;
+namespace EloquentJs\Events;
 
 use Illuminate\Database\Eloquent\Builder;
 

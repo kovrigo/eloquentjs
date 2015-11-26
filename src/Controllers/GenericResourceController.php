@@ -1,6 +1,6 @@
 <?php
 
-namespace Parsnick\EloquentJs\Controllers;
+namespace EloquentJs\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Parsnick\EloquentJs\Listeners;
+namespace EloquentJs\Listeners;
 
-use Parsnick\EloquentJs\Events\EloquentJsWasCalled;
-use Parsnick\EloquentJs\Translators\QueryTranslator;
+use EloquentJs\Events\EloquentJsWasCalled;
+use EloquentJs\Translators\QueryTranslator;
 
 class ApplyQueryMethodsToBuilder
 {

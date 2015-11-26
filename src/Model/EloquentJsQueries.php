@@ -1,10 +1,10 @@
 <?php
 
-namespace Parsnick\EloquentJs\Model;
+namespace EloquentJs\Model;
 
 use DateTime;
 use InvalidArgumentException;
-use Parsnick\EloquentJs\Events\EloquentJsWasCalled;
+use EloquentJs\Events\EloquentJsWasCalled;
 use UnexpectedValueException;
 
 trait EloquentJsQueries

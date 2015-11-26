@@ -1,10 +1,9 @@
 <?php
 
-namespace Parsnick\EloquentJs\Translators;
+namespace EloquentJs\Translators;
 
 use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
-use Parsnick\EloquentJs\Translators\BaseQueryTranslator;
 
 /**
  * JsonQueryTranslator supports the default EloquentJS encoding of query calls,

@@ -1,15 +1,15 @@
 <?php
 
-namespace Parsnick\EloquentJs;
+namespace EloquentJs;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Parsnick\EloquentJs\Controllers\GenericResourceController;
-use Parsnick\EloquentJs\Events\EloquentJsWasCalled;
-use Parsnick\EloquentJs\Listeners\ApplyQueryMethodsToBuilder;
-use Parsnick\EloquentJs\Translators\JsonQueryTranslator;
-use Parsnick\EloquentJs\Translators\QueryTranslator;
+use EloquentJs\Controllers\GenericResourceController;
+use EloquentJs\Events\EloquentJsWasCalled;
+use EloquentJs\Listeners\ApplyQueryMethodsToBuilder;
+use EloquentJs\Translators\JsonQueryTranslator;
+use EloquentJs\Translators\QueryTranslator;
 
 class EloquentJsServiceProvider extends ServiceProvider
 {

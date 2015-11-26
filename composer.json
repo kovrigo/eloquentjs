@@ -2,7 +2,7 @@
     "name": "parsnick/eloquentjs-server",
     "autoload": {
         "psr-4": {
-            "Parsnick\\EloquentJs\\": "src/"
+            "EloquentJs\\": "src/"
         }
     },
     "require-dev": {

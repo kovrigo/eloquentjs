@@ -1,13 +1,13 @@
 <?php
 
-namespace Parsnick\EloquentJs\Tests;
+namespace EloquentJs\Tests;
 
 use Faker\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use Parsnick\EloquentJs\Model\EloquentJsQueries;
-use Parsnick\EloquentJs\EloquentJsServiceProvider;
+use EloquentJs\Model\EloquentJsQueries;
+use EloquentJs\EloquentJsServiceProvider;
 
 class IntegrationTest extends TestCase
 {
