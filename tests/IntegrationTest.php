@@ -111,6 +111,26 @@ class IntegrationTest extends TestCase
         Post::useEloquentJs($query);
     }
 
+    /** @test */
+    public function it_can_be_mixed_with_other_query_builder_methods_like_a_standard_scope()
+    {
+        $query = json_encode([
+            ['latest', []]
+        ]);
+        $this->assertSameResult(
+            Post::useEloquentJs($query)->where('visible', 1)->get(),
+            Post::latest()->where('visible', 1)->get()
+        );
+
+        $query = json_encode([
+            ['where', ['title', 'like', '%a%']]
+        ]);
+        $this->assertSameResult(
+            Post::where('visible', 0)->useEloquentJs($query)->get(),
+            Post::where('visible', 0)->where('title', 'like', '%a%')->get()
+        );
+    }
+
     /**
      * Assert two query results (either models or collections) are identical.
      *
@@ -121,7 +141,7 @@ class IntegrationTest extends TestCase
     protected function assertSameResult($expected, $actual, $message = 'Result not the same')
     {
         if ($expected instanceof Collection) {
-            return $this->assertEmpty($expected->diff($actual)->all());
+            return $this->assertEquals($expected->implode('id', ','), $actual->implode('id', ','), $message);
         }
 
         $this->assertEquals($expected->getKey(), $actual->getKey(), $message);
