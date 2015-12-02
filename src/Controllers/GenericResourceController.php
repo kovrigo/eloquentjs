@@ -64,7 +64,11 @@ class GenericResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $resource = $this->model->findOrFail($id);
+
+        $resource->update($request->all());
+
+        return $resource;
     }
 
     /**
