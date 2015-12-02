@@ -2,6 +2,7 @@
 
 namespace EloquentJs\Model;
 
+use Carbon\Carbon;
 use DateTime;
 use InvalidArgumentException;
 use EloquentJs\Events\EloquentJsWasCalled;
@@ -9,11 +10,6 @@ use UnexpectedValueException;
 
 trait EloquentJsQueries
 {
-    /**
-     * @var bool
-     */
-    static protected $overrideDates = false;
-
     /**
      * Scope to results that satisfy the string-encoded list of query methods described by $stack.
      *
@@ -29,8 +25,6 @@ trait EloquentJsQueries
         }
 
         static::$dispatcher->fire(new EloquentJsWasCalled($query, $stack));
-
-        static::$overrideDates = true;
     }
 
     /**
@@ -58,23 +52,30 @@ trait EloquentJsQueries
     }
 
     /**
-     * Override the date serializer.
+     * Prepare a date for array / JSON serialization.
      *
-     * When we're sending data back to our javascript, we want
-     * dates in a predictable js-friendly format. At all other times,
-     * defer back to the parent method.
+     * Overrides the date serializer to ensure our Javascript can
+     * understand the format.
      *
-     * This seems like a rather ugly hack. :(
-     *
+     * @todo  implement date handling without global side effects
      * @param DateTime $date
      * @return string
      */
     protected function serializeDate(DateTime $date)
     {
-        if (static::$overrideDates) {
-            return $date->toIso8601String();
-        }
+        return $date->toIso8601String();
+    }
 
-        return parent::serializeDate($date);
+    /**
+     * Return a timestamp as DateTime object.
+     *
+     * Accept dates from Javascript in any format that Carbon recognises.
+     *
+     * @param  string $value
+     * @return Carbon
+     */
+    protected function asDateTime($value)
+    {
+        return Carbon::parse($value);
     }
 }
