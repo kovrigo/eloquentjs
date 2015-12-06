@@ -1,5 +1,5 @@
 {
-    "name": "parsnick/eloquentjs-server",
+    "name": "parsnick/eloquentjs",
     "autoload": {
         "psr-4": {
             "EloquentJs\\": "src/"

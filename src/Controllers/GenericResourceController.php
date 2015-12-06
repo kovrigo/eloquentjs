@@ -52,7 +52,7 @@ class GenericResourceController extends Controller
      */
     public function show($id)
     {
-        //
+        return $this->model->find($id);
     }
 
     /**
@@ -64,6 +64,10 @@ class GenericResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($id === '*') {
+            return $this->model->newQuery()->useEloquentJs()->update($request->all());
+        }
+
         $resource = $this->model->findOrFail($id);
 
         $resource->update($request->all());
@@ -79,6 +83,12 @@ class GenericResourceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id === '*') {
+            return $this->model->newQuery()->useEloquentJs()->delete();
+        }
+
+        $resource = $this->model->findOrFail($id);
+
+        return ['success' => $resource->delete()];
     }
 }
