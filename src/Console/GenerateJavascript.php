@@ -2,9 +2,7 @@
 
 namespace EloquentJs\Console;
 
-use EloquentJs\Generator\EndpointLocator;
 use EloquentJs\Generator\Generator;
-use EloquentJs\Generator\ModelFinder;
 use EloquentJs\Generator\ModelInputParser;
 use Illuminate\Console\Command;
 
@@ -80,7 +78,7 @@ class GenerateJavascript extends Command
      */
     protected function printMapping($models)
     {
-        $rows = array_map(function ($model, $endpoint) {
+        $rows = array_map(function($model, $endpoint) {
             return [$model, $endpoint];
         }, array_keys($models), $models);
 
@@ -94,7 +92,7 @@ class GenerateJavascript extends Command
      */
     protected function populateMissingEndpoints(&$models)
     {
-        array_walk($models, function (&$endpoint, $model) {
+        array_walk($models, function(&$endpoint, $model) {
             if (empty($endpoint)) {
                 $endpoint = $this->ask("Enter the endpoint to use for the '{$model}' model");
             }
