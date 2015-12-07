@@ -2,6 +2,7 @@
 
 namespace EloquentJs;
 
+use EloquentJs\Console\GenerateJavascript;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +24,8 @@ class EloquentJsServiceProvider extends ServiceProvider
         $this->app->bind(QueryTranslator::class, function ($app) {
            return new JsonQueryTranslator($app['request']->input('query', '[]'));
         });
+
+        $this->commands([GenerateJavascript::class]);
     }
 
     /**

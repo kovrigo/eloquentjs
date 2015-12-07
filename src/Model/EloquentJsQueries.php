@@ -78,4 +78,18 @@ trait EloquentJsQueries
     {
         return Carbon::parse($value);
     }
+
+    /**
+     * Get the endpoint defined on this model.
+     *
+     * @return string|null
+     */
+    public function getEndpoint()
+    {
+        if (property_exists($this, 'endpoint')) {
+            return $this->endpoint;
+        }
+
+        return null;
+    }
 }
