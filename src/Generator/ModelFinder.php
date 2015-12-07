@@ -41,8 +41,8 @@ class ModelFinder
     public function inList(array $classes, $namespace = null)
     {
         if ($namespace) {
-            array_walk($classes, function (&$className) use ($namespace) {
-                $className = str_replace('\\\\', '\\', $namespace . '\\' . $className);
+            array_walk($classes, function(&$className) use ($namespace) {
+                $className = str_replace('\\\\', '\\', $namespace.'\\'.$className);
             });
         }
 
