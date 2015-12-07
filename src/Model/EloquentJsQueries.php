@@ -76,7 +76,11 @@ trait EloquentJsQueries
      */
     protected function asDateTime($value)
     {
-        return Carbon::parse($value);
+        if (is_string($value)) {
+            return Carbon::parse($value);
+        }
+
+        return parent::asDateTime($value);
     }
 
     /**
