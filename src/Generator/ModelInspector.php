@@ -48,7 +48,7 @@ class ModelInspector
      */
     public function getScopes()
     {
-        return array_map(function ($method) {
+        return array_map(function($method) {
             return lcfirst(substr($method, 5));
         }, $this->getScopeMethods());
     }
@@ -63,7 +63,7 @@ class ModelInspector
     protected function getScopeMethods()
     {
         return array_values(
-            array_filter(get_class_methods($this->model), function ($method) {
+            array_filter(get_class_methods($this->model), function($method) {
                 return substr($method, 0, 5) === 'scope' && ! in_array($method, ['scopeScope', 'scopeUseEloquentJs']);
             })
         );

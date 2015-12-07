@@ -20,7 +20,7 @@ class Generator
     /**
      * @type string location of the base EloquentJs build
      */
-    const BASE_BUILD = __DIR__ . '/../../eloquent.js';
+    const BASE_BUILD = __DIR__.'/../../eloquent.js';
 
     /**
      * @param Filesystem $files
