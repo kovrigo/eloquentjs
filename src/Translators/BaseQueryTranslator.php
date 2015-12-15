@@ -25,6 +25,7 @@ abstract class BaseQueryTranslator implements QueryTranslator
         'orderBy', 'latest', 'oldest',
         'offset', 'skip', 'limit', 'take', 'forPage',
         'scope',
+        'with',
     ];
 
     /**

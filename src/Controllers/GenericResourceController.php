@@ -52,7 +52,7 @@ class GenericResourceController extends Controller
      */
     public function show($id)
     {
-        return $this->model->find($id);
+        return $this->model->useEloquentJs()->find($id);
     }
 
     /**

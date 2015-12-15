@@ -59,7 +59,7 @@ class Generator
         foreach ($models as $model => $endpoint) {
             $this->append($this->modelConfig(new $model, $endpoint));
         }
-        $this->append('})(Eloquent);');
+        $this->append('})(Eloquent = Eloquent.default);');
     }
 
     /**
