@@ -28,7 +28,9 @@ class ModelFinder
      */
     public function inDirectory($directory)
     {
-        return array_filter($this->finder->findClasses($directory), [$this, 'usesTrait']);
+        return $this->filterByTrait(
+            $this->finder->findClasses($directory)
+        );
     }
 
     /**
@@ -46,18 +48,20 @@ class ModelFinder
             });
         }
 
-        return array_filter($classes, [$this, 'usesTrait']);
+        return $this->filterByTrait($classes);
     }
 
 
     /**
-     * Test if the given class is using the EloquentJs trait.
+     * Filter a list of classes to only those that use EloquentJs trait.
      *
-     * @param string $className
-     * @return bool
+     * @param array $classes
+     * @return array
      */
-    protected function usesTrait($className)
+    protected function filterByTrait(array $classes)
     {
-        return in_array(EloquentJsQueries::class, class_uses_recursive($className));
+        return array_filter($classes, function ($className) {
+            return in_array(EloquentJsQueries::class, class_uses_recursive($className));
+        });
     }
 }
