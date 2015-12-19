@@ -1,0 +1,73 @@
+<?php
+
+namespace EloquentJs\ScriptGenerator;
+
+use EloquentJs\ScriptGenerator\Model\Metadata;
+
+class Generator
+{
+    /**
+     * @type string location of the base EloquentJs build
+     */
+    const BASE_BUILD = __DIR__.'/../../eloquent.js';
+
+    /**
+     * Generate EloquentJs javascript for the given models.
+     *
+     * @param array $models
+     * @return string
+     */
+    public function build(array $models)
+    {
+        return $this->prefix().$this->models($models).$this->suffix();
+    }
+
+    /**
+     * Get prefix for our javascript build.
+     *
+     * @return string
+     */
+    protected function prefix()
+    {
+        return file_get_contents(static::BASE_BUILD)
+            . '(function(E){';
+    }
+
+    /**
+     * Get custom model definitions for build.
+     *
+     * @param  array $models
+     * @return string
+     */
+    protected function models(array $models)
+    {
+        return implode(';', array_map([$this, 'model'], $models));
+    }
+
+    /**
+     * Get suffix for our javascript build.
+     *
+     * @return string
+     */
+    protected function suffix()
+    {
+        return '})(Eloquent=Eloquent.default)';
+    }
+
+    /**
+     * Generate javascript to describe the given model.
+     *
+     * @param  Metadata $model
+     * @return string
+     */
+    protected function model(Metadata $model)
+    {
+        $config = json_encode(array_filter([
+            'endpoint' => $model->endpoint,
+            'dates'    => $model->dates,
+            'scopes'   => $model->scopes,
+        ]), JSON_UNESCAPED_SLASHES);
+
+        return "E('{$model->name}', {$config})";
+    }
+}

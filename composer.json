@@ -5,6 +5,12 @@
             "EloquentJs\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "EloquentJs\\Tests\\": "tests/",
+            "Acme\\": "tests/models"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^5.0",
         "orchestra/testbench": "~3.1",

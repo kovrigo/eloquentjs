@@ -4,19 +4,20 @@ namespace EloquentJs\Model;
 
 use Carbon\Carbon;
 use DateTime;
+use EloquentJs\Query\Events\EloquentJsWasCalled;
+use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
-use EloquentJs\Events\EloquentJsWasCalled;
 use UnexpectedValueException;
 
 trait EloquentJsQueries
 {
     /**
-     * Scope to results that satisfy the string-encoded list of query methods described by $stack.
+     * Scope to results that satisfy an EloquentJs query.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $stack
+     * @param Builder $query
+     * @param string|null|callable $rules
      */
-    public function scopeUseEloquentJs($query, $stack = null)
+    public function scopeEloquentJs(Builder $query, $rules = null)
     {
         if ( ! static::$dispatcher) {
             throw new UnexpectedValueException(
@@ -24,16 +25,11 @@ trait EloquentJsQueries
             );
         }
 
-        static::$dispatcher->fire(new EloquentJsWasCalled($query, $stack));
+        static::$dispatcher->fire(new EloquentJsWasCalled($query, $rules));
     }
 
     /**
      * Handle dynamic calls to scope methods.
-     *
-     * Yes, this is indeed a scope for calling another scope method.
-     * While there are other ways we could support scopes, this has
-     * the benefit of requiring no special treatment in our BaseQueryTranslator
-     * - no different from how we handle `where`, `orderBy`, etc.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $name
@@ -47,7 +43,7 @@ trait EloquentJsQueries
             throw new InvalidArgumentException("No such scope [$name]");
         }
 
-        array_unshift($parameters, $query);
+        array_unshift($parameters, $query); // prepend $query to $parameters array
         call_user_func_array([$this, $methodName], $parameters);
     }
 

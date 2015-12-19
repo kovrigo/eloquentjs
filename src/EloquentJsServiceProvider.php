@@ -2,15 +2,20 @@
 
 namespace EloquentJs;
 
-use EloquentJs\Console\GenerateJavascript;
+use EloquentJs\Controllerless\GenericController;
+use EloquentJs\Controllerless\RouteRegistrar;
+use EloquentJs\Model\AcceptsEloquentJsQueries;
+use EloquentJs\Query\Events\EloquentJsWasCalled;
+use EloquentJs\Query\Guard\Policy\Builder;
+use EloquentJs\Query\Guard\Policy\Factory;
+use EloquentJs\Query\Interpreter;
+use EloquentJs\Query\Listeners\ApplyQueryToBuilder;
+use EloquentJs\Query\Listeners\CheckQueryIsAuthorized;
+use EloquentJs\Query\Query;
+use EloquentJs\ScriptGenerator\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use EloquentJs\Controllers\GenericResourceController;
-use EloquentJs\Events\EloquentJsWasCalled;
-use EloquentJs\Listeners\ApplyQueryMethodsToBuilder;
-use EloquentJs\Translators\JsonQueryTranslator;
-use EloquentJs\Translators\QueryTranslator;
 
 class EloquentJsServiceProvider extends ServiceProvider
 {
@@ -21,11 +26,19 @@ class EloquentJsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(QueryTranslator::class, function ($app) {
-            return new JsonQueryTranslator($app['request']->input('query', '[]'));
+        $this->app->singleton('eloquentjs.query', function ($app) {
+            return $app[Interpreter::class]->parse($app['request']);
         });
 
-        $this->commands([GenerateJavascript::class]);
+        $this->app->when(CheckQueryIsAuthorized::class)
+            ->needs(Query::class)
+            ->give('eloquentjs.query');
+
+        $this->app->when(ApplyQueryToBuilder::class)
+            ->needs(Query::class)
+            ->give('eloquentjs.query');
+
+        $this->commands([Command::class]);
     }
 
     /**
@@ -37,50 +50,76 @@ class EloquentJsServiceProvider extends ServiceProvider
      */
     public function boot(Dispatcher $events, Router $router)
     {
-        $events->listen(EloquentJsWasCalled::class, ApplyQueryMethodsToBuilder::class);
+        $this->addListenersToApplyQuery($events);
 
-        $this->addGenericResourceRouting($router);
+        $this->enableGenericResourceRouting($router);
+
+        $this->setDefaultPolicy();
+    }
+
+    /**
+     * Add listener for EloquentJs usage.
+     *
+     * @param Dispatcher $events
+     * @return void
+     */
+    protected function addListenersToApplyQuery(Dispatcher $events)
+    {
+        $events->listen(EloquentJsWasCalled::class, CheckQueryIsAuthorized::class, 10);
+        $events->listen(EloquentJsWasCalled::class, ApplyQueryToBuilder::class);
     }
 
     /**
      * Set up the generic resource routes + controller.
      *
      * @param Router $router
+     * @return void
      */
-    protected function addGenericResourceRouting(Router $router)
+    protected function enableGenericResourceRouting(Router $router)
     {
-        $router->macro('eloquent', function($uri, $resource, $options = []) use ($router) {
+        $app = $this->app;
 
-            // The $router->resource() method doesn't allow custom route attributes
-            // in the $options array. So, while the group() may look redundant here,
-            // we need it to attach the relevant resource classname to each of the
-            // individual restful routes being defined.
-            //
-            // This is so when we come to resolve the controller (see below), we
-            // can easily tell what type of resource we need, i.e. which model.
-            $router->group(compact('resource'), function($router) use ($uri, $options) {
+        $app->bind('eloquentjs.router', RouteRegistrar::class);
 
-                if (empty($options['only'])) { // Exclude the routes for displaying forms
-                    $options['except'] = (array) array_get($options, 'except', []) + ['create', 'edit'];
+        $app->when(RouteRegistrar::class)
+            ->needs('$controller')
+            ->give(GenericController::class);
+
+        $app->when(GenericController::class)
+            ->needs(AcceptsEloquentJsQueries::class)
+            ->give(function ($app) {
+                if ($resource = $app['eloquentjs.router']->getCurrentResource()) {
+                    return $app->make($resource);
                 }
-
-                $router->resource($uri, '\\'.GenericResourceController::class, $options);
-
             });
+
+        $router->macro('eloquent', function ($uri, $resource, $options = []) use ($app) {
+            $app['eloquentjs.router']->addRoute($uri, $resource, $options);
         });
+    }
 
-        // Typically you'd have dedicated controllers for each resource.
-        // Since that's not the case here, we need some way of telling
-        // our generic controller which resource we're working with.
-        $this->app->resolving(function(GenericResourceController $controller) {
-
-            $currentRoute = $this->app['router']->current();
-
-            if ($currentRoute) { // in case we're in the console, etc.
-                $controller->setModel(
-                    $this->app->make($currentRoute->getAction()['resource'])
-                );
-            }
+    /**
+     * Set default policy for guarding EloquentJs queries.
+     *
+     * @return void
+     */
+    protected function setDefaultPolicy()
+    {
+        $this->app->bind(Factory::class, function () {
+            return new Factory(
+                function (Builder $guard) {
+                    $guard->allow('select');
+                    $guard->allow('distinct');
+                    $guard->allow('where');
+                    $guard->allow('groupBy');
+                    $guard->allow('having');
+                    $guard->allow('orderBy');
+                    $guard->allow('offset');
+                    $guard->allow('limit');
+                    $guard->allow('scope');
+                    $guard->allow('with');
+                }
+            );
         });
     }
 }

@@ -2,4 +2,4 @@ suites:
   eloquentjs_suite:
     namespace: EloquentJs
     psr4_prefix: EloquentJs
-bootstrap: spec/bootstrap.php
+#bootstrap: spec/bootstrap.php
