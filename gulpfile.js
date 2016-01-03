@@ -8,7 +8,7 @@ gulp.task('styles', () => {
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(minifyCss())
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('assets/'));
 });
 
 gulp.task('styles:watch', () => {

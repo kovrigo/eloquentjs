@@ -6,10 +6,10 @@ layout: blank
 
 <!-- Sidebar Menu -->
 <div class="ui vertical inverted sidebar menu">
-  <a class="active item" href="/">Overview</a>
-  <a class="item" href="/getting-started">Getting Started</a>
-  <a class="item" href="/php">Server</a>
-  <a class="item" href="/js">Client</a>
+  <a class="active item" href=".">Overview</a>
+  <a class="item" href="getting-started">Getting Started</a>
+  <a class="item" href="server">Server</a>
+  <a class="item" href="client">Client</a>
 </div>
 
 <div class="pusher">
@@ -21,10 +21,10 @@ layout: blank
         <a class="toc item">
           <i class="sidebar icon"></i>
         </a>
-        <a class="active item" href="/">Overview</a>
-        <a class="item" href="/getting-started">Getting Started</a>
-        <a class="item" href="/php">Server</a>
-        <a class="item" href="/js">Client</a>
+        <a class="active item" href=".">Overview</a>
+        <a class="item" href="getting-started">Getting Started</a>
+        <a class="item" href="server">Server</a>
+        <a class="item" href="client">Client</a>
         <div class="right item">
           <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
             <i class="github icon"></i>
@@ -39,7 +39,7 @@ layout: blank
         EloquentJs
       </h1>
       <h2>Bring your Eloquent ORM to the browser</h2>
-      <a class="ui huge primary button" href="/getting-started">Get Started <i class="right arrow icon"></i></a>
+      <a class="ui huge primary button" href="getting-started">Get Started <i class="right arrow icon"></i></a>
     </div>
 
   </div>
