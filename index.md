@@ -8,8 +8,8 @@ layout: blank
 <div class="ui vertical inverted sidebar menu">
   <a class="active item" href=".">Overview</a>
   <a class="item" href="getting-started">Getting Started</a>
-  <a class="item" href="server">Server</a>
   <a class="item" href="client">Client</a>
+  <a class="item" href="server">Server</a>
 </div>
 
 <div class="pusher">
@@ -23,8 +23,8 @@ layout: blank
         </a>
         <a class="active item" href=".">Overview</a>
         <a class="item" href="getting-started">Getting Started</a>
-        <a class="item" href="server">Server</a>
         <a class="item" href="client">Client</a>
+        <a class="item" href="server">Server</a>
         <div class="right item">
           <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
             <i class="github icon"></i>
@@ -35,6 +35,7 @@ layout: blank
     </div>
 
     <div class="ui text container">
+      <div class="preview-image"></div>
       <h1 class="ui inverted header">
         EloquentJs
       </h1>
