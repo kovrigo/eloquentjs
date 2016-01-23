@@ -12,6 +12,7 @@ class Post extends Model implements AcceptsEloquentJsQueries
 
     protected $dates = ['published_at'];
     protected $endpoint = 'POSTS';
+    protected $guarded = [];
 
     public function scopePublished($query)
     {

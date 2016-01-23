@@ -2,12 +2,41 @@
 
 namespace EloquentJs\Tests;
 
+use Acme\Post;
 use EloquentJs\EloquentJsServiceProvider;
+use Faker\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * Setup the test environment.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->artisan('migrate', [
+            '--database' => 'testbench',
+            '--realpath' => realpath(__DIR__ . '/migrations'),
+        ]);
+
+        $faker = Factory::create();
+        $faker->seed(1234);
+
+        Post::unguard();
+        for ($i = 0; $i < 100; $i++) {
+            Post::create([
+                'title'      => $faker->sentence,
+                'body'       => $faker->text,
+                'visible'    => $faker->boolean(75),
+                'created_at' => $faker->dateTimeBetween('-30 years', 'now'),
+            ]);
+        }
+        Post::reguard();
+    }
+
     /**
      * Get package providers
      *
