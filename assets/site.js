@@ -27,8 +27,12 @@ $(document)
 
     $('main.ui.text.container h2')
       .visibility({
-        onTopVisible: function () {
+        onTopPassed: function () {
           setActiveItem(this.id);
+        },
+        onTopPassedReverse: function () {
+          var previous = $(this).prevAll('h2').first().attr('id');
+          setActiveItem(previous);
         },
         once: false
       });
@@ -36,7 +40,7 @@ $(document)
     function setActiveItem(name) {
       $('.ui.toc .ui.menu a').each(function () {
         var $this = $(this);
-        if ($this.attr('href').indexOf('#'+name) >= 0) {
+        if (name && $this.attr('href').indexOf('#'+name) >= 0) {
           $this.addClass('active');
         } else {
           $this.removeClass('active');

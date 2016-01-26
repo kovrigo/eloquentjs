@@ -11,18 +11,12 @@ main.text.container {
     padding-bottom: 6rem;
 }
 
-aside + main.ui.grid.container {
-    margin-top: 3rem;
-}
-#toc {
-    display: none;
-}
-.ui.toc.close.rail {
-    margin-top: 8rem;
+.ui.toc.rail {
+    margin-top: 4rem;
 }
 
+#toc { display: none }
+
 @media only screen and (min-width: 992px) {
-    #toc {
-        display: block;
-    }
+    #toc { display: block }
 }
