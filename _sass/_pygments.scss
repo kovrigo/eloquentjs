@@ -1,4 +1,6 @@
-.highlight { text-align: left }
+.highlight {
+  text-align: left;
+}
 .highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #aaaaaa; font-style: italic } /* Comment */
 .highlight .err { color: #F00000; background-color: #F0A0A0 } /* Error */
@@ -59,7 +61,9 @@
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
 
 .sample.terminal {
-  .highlight .hll { background-color: #49483e }
+  background-color: #49483e;
+  color: #f8f8f2;
+
   .highlight .c { color: #75715e } /* Comment */
   .highlight .err { color: #960050; background-color: #1e0010 } /* Error */
   .highlight .k { color: #66d9ef } /* Keyword */

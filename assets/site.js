@@ -19,5 +19,30 @@ $(document)
       .sidebar('attach events', '.toc.item')
     ;
 
+    $('.ui.sticky')
+      .sticky({
+        offset: 50,
+        context: 'main'
+      });
+
+    $('main.ui.text.container h2')
+      .visibility({
+        onTopVisible: function () {
+          setActiveItem(this.id);
+        }
+        once: false
+      });
+
+    function setActiveItem(name) {
+      console.log(name);
+      $('.ui.toc .ui.menu a').each(function () {
+        var $this = $(this);
+        if ($this.attr('href').indexOf('#'+name) >= 0) {
+          $this.addClass('active');
+        } else {
+          $this.removeClass('active');
+        }
+      });
+    }
   })
 ;

@@ -1,29 +1,38 @@
-.sample {
+.ui.segment.sample {
   overflow: hidden;
+  padding-left: 2.6rem;
+  margin-bottom: 4rem;
+  & > .highlight > pre { margin: 0 }
   &::after {
     border-right: 1px solid rgba(34,36,38,.05);
-    color: rgba(34,36,38,.5);
-    font-size: 0.6rem;
+    color: rgb(34,36,38);
+    font-size: 0.8rem;
     font-weight: bold;
     position: absolute;
-    padding-top: 1rem;
+    padding-top: 0.1rem;
     top: 0;
     bottom: 0;
     left: 0;
-    width: 1.4rem;
+    width: 1.6rem;
     text-align: center;
+    opacity: 0.5;
   }
 }
-.php.sample::after {
+.ui.segment.php.sample::after {
+  color: #eee;
   content: 'php';
   font-style: italic;
   background: #8892BF;
 }
-.es5.sample::after {
+.ui.segment.es5.sample::after {
   content: 'JS';
   background: #F0DB4F;
 }
-.es6.sample::after {
-  content: 'ES6';
+.ui.segment.es6.sample::after {
+  content: 'es6';
   background: #F0DB4F;
+}
+.ui.segment.terminal.sample::after {
+  content: '';
+  background: #000;
 }

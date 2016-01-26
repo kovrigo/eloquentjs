@@ -7,7 +7,14 @@ layout: blank
 <!-- Sidebar Menu -->
 <div class="ui vertical inverted sidebar menu">
   <a class="active item" href=".">Overview</a>
-  <a class="item" href="getting-started">Getting Started</a>
+  <div class="item">
+    <a href="getting-started">Getting Started</a>
+    <div class="menu">
+      <a class="item" href="getting-started">Installation</a>
+      <a class="item" href="getting-started">Configuration</a>
+      <a class="item" href="getting-started">Usage</a>
+    </div>
+  </div>
   <a class="item" href="client">Client</a>
   <a class="item" href="server">Server</a>
 </div>
@@ -119,7 +126,7 @@ Eloquent.Post.find(1).then(post => {
         so it's all you usually need.
       </p>
       <p>
-      <a href="/php" class="ui large button">Read documentation</a>
+      <a href="server" class="ui large button">Read documentation</a>
       </p>
     </div>
 
@@ -132,11 +139,11 @@ Eloquent.Post.find(1).then(post => {
       </div>
       <h3 class="ui header">laravel-eloquentjs <span class="subtitle">the node package</span></h3>
       <p>
-        The client-side companion to <code>eloquentjs</code>, this provides the Eloquent API
-        in javascript. It supports the fluent syntax you already know, sends the encoded query
-        to the server, and interprets the response.
+        For advanced usage, the complete source of the client-side half of EloquentJs
+        is available here. It provides the Eloquent API in javascript, letting you use
+        the same fluent syntax you already know.
       </p>
-      <a href="/js" class="ui large button">Read documentation</a>
+      <a href="client" class="ui large button">Read documentation</a>
     </div>
 
   </div>

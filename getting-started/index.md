@@ -3,32 +3,21 @@ layout: default
 active: starting
 ---
 
-## Installation
+<div class="ui basic segment">
 
-The package is available on [Packagist](https://packagist.org/packages/parsnick/eloquentjs)
+  <h1 class="ui inverted block header">Getting Started</h1>
 
-<div class="ui segment php sample">
-{% highlight php startinline %}
-use Illuminate\Database\Eloquent\Model;
+  <div class="ui left toc close rail">
+    <div class="ui large fluid vertical pointing sticky menu">
+      {% for article in site.intro %}
+        <a href="getting-started/#{{ article.title | slugify }}" class="item">{{ article.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
 
-class Post extends Model {
+{% for article in site.intro %}
+  <h2 id="{{ article.title | slugify }}" class="ui dividing header">{{ article.title }}</h2>
+  {{ article.content }}
+{% endfor %}
 
-}
-{% endhighlight %}
-</div>
-
-<div class="ui segment es6 sample">
-{% highlight js %}
-import { Model } from 'laravel-eloquentjs';
-
-class Post extends Model {
-
-}
-{% endhighlight %}
-</div>
-
-<div class="ui segment es5 sample">
-{% highlight js %}
-let Post = Eloquent('Post');
-{% endhighlight %}
 </div>
