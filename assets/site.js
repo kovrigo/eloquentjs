@@ -29,12 +29,11 @@ $(document)
       .visibility({
         onTopVisible: function () {
           setActiveItem(this.id);
-        }
+        },
         once: false
       });
 
     function setActiveItem(name) {
-      console.log(name);
       $('.ui.toc .ui.menu a').each(function () {
         var $this = $(this);
         if ($this.attr('href').indexOf('#'+name) >= 0) {
