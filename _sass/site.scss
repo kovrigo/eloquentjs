@@ -6,17 +6,30 @@
     font-size: 66%;
     opacity: 0.6;
 }
+
 main.text.container {
     padding-top: 1rem;
     padding-bottom: 6rem;
 }
 
-.ui.toc.rail {
-    margin-top: 4rem;
+.toc.toggler {
+    position: fixed;
+    cursor: pointer;
+    top: 1rem;
+    left: 1rem;
 }
 
-#toc { display: none }
+@media screen and (max-width: 800px) {
+    .docs .toc.toggler, .docs .ui.sidebar {
+        display: none !important;
+    }
+}
 
-@media only screen and (min-width: 992px) {
-    #toc { display: block }
+.docs {
+    h2.ui.header {
+        margin-top: 4rem;
+    }
+    h3, h4 {
+        margin-top: 3rem;
+    }
 }

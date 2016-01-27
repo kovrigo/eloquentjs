@@ -1,65 +1,47 @@
 ---
 layout: blank
+active: overview
 ---
 
-{% include navbar.html active="overview" classes="hidden fixed" %}
+<div class="ui inverted vertical masthead center aligned segment">
 
-<!-- Sidebar Menu -->
-<div class="ui vertical inverted sidebar menu">
-  <a class="active item" href=".">Overview</a>
-  <div class="item">
-    <a href="getting-started">Getting Started</a>
-    <div class="menu">
-      <a class="item" href="getting-started">Installation</a>
-      <a class="item" href="getting-started">Configuration</a>
-      <a class="item" href="getting-started">Usage</a>
-    </div>
-  </div>
-  <a class="item" href="client">Client</a>
-  <a class="item" href="server">Server</a>
-</div>
-
-<div class="pusher">
-
-  <div class="ui inverted vertical masthead center aligned segment">
-
-    <div class="ui container">
-      <div class="ui large secondary inverted pointing menu">
-        <a class="toc item">
-          <i class="sidebar icon"></i>
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a class="toc toggler item">
+        <i class="sidebar icon"></i>
+      </a>
+      <a class="active item" href=".">Overview</a>
+      <a class="item" href="getting-started">Getting Started</a>
+      <a class="item" href="client">Client</a>
+      <a class="item" href="server">Server</a>
+      <div class="right item">
+        <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
+          <i class="github icon"></i>
+          View on Github
         </a>
-        <a class="active item" href=".">Overview</a>
-        <a class="item" href="getting-started">Getting Started</a>
-        <a class="item" href="client">Client</a>
-        <a class="item" href="server">Server</a>
-        <div class="right item">
-          <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
-            <i class="github icon"></i>
-            View on Github
-          </a>
-        </div>
       </div>
     </div>
-
-    <div class="ui text container">
-      <div class="preview-image"></div>
-      <h1 class="ui inverted header">
-        EloquentJs
-      </h1>
-      <h2>Bring your Eloquent ORM to the browser</h2>
-      <a class="ui huge primary button" href="getting-started">Get Started <i class="right arrow icon"></i></a>
-    </div>
-
   </div>
 
-  <div class="ui vertical stripe segment">
-    <div class="ui equal width relaxed stackable grid container">
-      <div class="ui center aligned getting started row">
+  <div class="ui text container">
+    <div class="preview-image"></div>
+    <h1 class="ui inverted header">
+      EloquentJs
+    </h1>
+    <h2>Bring your Eloquent ORM to the browser</h2>
+    <a class="ui huge primary button" href="getting-started">Get Started <i class="right arrow icon"></i></a>
+  </div>
 
-        <div class="column">
-          <i class="huge database icon"></i>
-          <h3>Define an <a href="https://laravel.com/docs/5.1/eloquent">Eloquent</a> model</h3>
-          <div class="ui segment">
+</div>
+
+<div class="ui vertical stripe segment">
+  <div class="ui equal width relaxed stackable grid container">
+    <div class="ui center aligned getting started row">
+
+      <div class="column">
+        <i class="huge database icon"></i>
+        <h3>Define an <a href="https://laravel.com/docs/5.1/eloquent">Eloquent</a> model</h3>
+        <div class="ui segment">
 {% highlight php startinline %}
 class Post extends \Illuminate\Database\Eloquent\Model
 {
@@ -69,14 +51,14 @@ class Post extends \Illuminate\Database\Eloquent\Model
   }
 }
 {% endhighlight %}
-          </div>
         </div>
+      </div>
 
-        <div class="column">
-          <i class="huge configure icon"></i>
-          <h3>Build your eloquent.js</h3>
-          <div class="ui inverted segment">
-            <div class="sample terminal">
+      <div class="column">
+        <i class="huge configure icon"></i>
+        <h3>Build your eloquent.js</h3>
+        <div class="ui inverted segment">
+          <div class="sample terminal">
 {% highlight console %}
 $ php artisan eloquentjs:generate
 
@@ -86,14 +68,14 @@ $ php artisan eloquentjs:generate
 
 Javascript written to public/eloquent.js
 {% endhighlight %}
-            </div>
           </div>
         </div>
+      </div>
 
-        <div class="column">
-          <i class="huge file code outline icon"></i>
-          <h3>Use eloquent in javascript</h3>
-          <div class="ui segment">
+      <div class="column">
+        <i class="huge file code outline icon"></i>
+        <h3>Use eloquent in javascript</h3>
+        <div class="ui segment">
 {% highlight javascript %}
 Eloquent.Post.find(1).then(post => {
   console.log('fetched post #' + post.id);
@@ -162,5 +144,3 @@ Eloquent.Post.find(1).then(post => {
     </div>
   </div>
 </div>
-
-</div><!-- /.pusher -->

@@ -1,10 +1,14 @@
 ---
-title: Configuration
+title: Set up
 ---
 
-#### Implement `AcceptsEloquentJsQueries` on an Eloquent model
+#### Edit your model classes to accept queries from EloquentJs
+
+* Implement the `AcceptsEloquentJsQueries` interface.
+* You can use the `EloquentJsQueries` trait to provide the implementation.
 
 <div class="ui segment php sample">
+    <div class="ui right corner label"></div>
 {% highlight php startinline %}
 use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\Model\EloquentJsQueries;
@@ -16,12 +20,14 @@ class Post extends Model implements AcceptsEloquentJsQueries {
 {% endhighlight %}
 </div>
 
-#### Create a RESTful endpoint
 
-EloquentJs needs a controller to perform CRUD operations.
-Use the `eloquent` macro on the router to set one up automatically.
+#### Create routes to handle queries from EloquentJs
+
+* EloquentJs needs a controller to perform CRUD operations.
+* You can use the `eloquent` macro to set one up automatically.
 
 <div class="ui segment php sample">
+    <div class="ui right corner label"></div>
 {% highlight php startinline %}
 // app/Http/routes.php
 Route::eloquent('api/posts', App\Post::class);
@@ -29,14 +35,16 @@ Route::eloquent('api/posts', App\Post::class);
 </div>
 
 
-#### Generate your custom eloquent.js
+#### Generate a custom eloquent.js build
 
-Use the artisan command to build a version of EloquentJs pre-configured
-for your models. Simply include the generated javascript file in your templates
-and start using Eloquent in the browser.
+* Use the artisan command to build a version of EloquentJs pre-configured
+for your models.
 
 <div class="ui segment terminal sample">
+    <div class="ui right corner label"></div>
 {% highlight bash %}
 php artisan eloquentjs:generate [--output="public/eloquent.js"]
 {% endhighlight %}
 </div>
+
+* Simply include the generated javascript file in your templates to start using Eloquent in the browser.

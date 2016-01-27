@@ -2,10 +2,11 @@
 title: Usage
 ---
 
-The model is available to your own javascript from the `Eloquent` global.
-The API is largely the same as Laravel's Eloquent, aside from a [few key differences](comparison_of_laravel_eloquent_and_eloquentjs.html).
+* The model is now available to your own javascript as a property of the `Eloquent` global.
+* It shares the Eloquent API you already know.
 
 <div class="ui segment es5 sample">
+    <div class="ui right corner label"></div>
 {% highlight js %}
 var Post = Eloquent.Post;
 
@@ -28,12 +29,13 @@ Post.saving(function (post) {
     if ( ! post.title) return false;
 });
 
-// Create a new post instance
+// Make a new post instance using the constructor
 var myPost = new Post({
     title: 'A new post',
     body: 'Hello'
 });
 
+// Save the post
 if (confirm('Save post?')) {
     myPost.save().then(function (post) {
         console.log('saved!');

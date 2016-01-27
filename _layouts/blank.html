@@ -7,8 +7,11 @@
   <link rel="stylesheet" href="lib/semantic.min.css">
   <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
-  {{ content }}
+<body class="pushable">
+  {% include sidebar.html %}
+  <div class="pusher">
+    {{ content }}
+  </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="lib/semantic.min.js"></script>
   <script src="assets/site.js"></script>

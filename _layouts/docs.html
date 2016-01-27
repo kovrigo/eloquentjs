@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EloquentJs</title>
+  <base href="{{ site.baseurl }}">
+  <link rel="stylesheet" href="lib/semantic.min.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="pushable docs">
+  {% include sidebar.html classes="restorable" %}
+  <div class="pusher">
+    <a class="toc toggler ui black icon button" title="Menu">
+      <i class="sidebar icon"></i>
+    </a>
+    <main class="ui text container">
+      <div class="ui breadcrumb">
+        <a class="section" href=".">EloquentJs</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section" href="getting-started/">Getting Started</div>
+      </div>
+      {{ content }}
+    </main>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="lib/semantic.min.js"></script>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+
+<div class="ui sidebar inverted left vertical {{ include.classes }} menu">
+  <div class="ui inverted icon menu">
+    <div class="right aligned item">
+      <i class="large close icon"></i>
+    </div>
+  </div>
+
+  <a href="." class="{% if page.active == 'overview' %} active {% endif %} header item">EloquentJs</a>
+  <div class="{% if page.active == 'intro' %} active {% endif %} item">
+    <a href="getting-started/">Getting Started</a>
+    <div class="menu">
+    {% for article in site.intro %}
+      <a href="getting-started/#{{ article.title | slugify }}" class="item">
+        {{ article.title }}
+      </a>
+    {% endfor %}
+    </div>
+  </div>
+  <a href="client" class="{% if page.active == 'client' %} active {% endif %} item">Client library (JS)</a>
+  <a href="server" class="{% if page.active == 'server' %} active {% endif %} item">Server library (PHP)</a>
+  <a href="examples" class="{% if page.active == 'examples' %} active {% endif %} item">Examples</a>
+  <div class="item" style="position: absolute; bottom: 0">
+    <a href="//github.com/parsnick/eloquentjs" class="ui secondary icon button" title="View on GitHub">
+      <i class="big github icon"></i>
+    </a>
+  </div>
+</div>
