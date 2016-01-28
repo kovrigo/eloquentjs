@@ -46,5 +46,3 @@ for your models.
 php artisan eloquentjs:generate [--output="public/eloquent.js"]
 {% endhighlight %}
 </div>
-
-* Simply include the generated javascript file in your templates to start using Eloquent in the browser.

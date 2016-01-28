@@ -35,6 +35,16 @@ active: overview
 </div>
 
 <div class="ui vertical stripe segment">
+  <div class="ui text container">
+    <p>
+      If you've already defined your models as part of a Laravel application, don't start from scratch with
+      your javascript. <em>EloquentJs</em> takes your existing configuration and provides client-side access
+      to your data with the same Eloquent API you already know.
+    </p>
+  </div>
+</div>
+
+<div class="ui vertical stripe segment">
   <div class="ui equal width relaxed stackable grid container">
     <div class="ui center aligned getting started row">
 
