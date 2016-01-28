@@ -1,5 +1,5 @@
 ---
-title: Set up
+title: Set up / configuration
 ---
 
 #### Edit your model classes to accept queries from EloquentJs

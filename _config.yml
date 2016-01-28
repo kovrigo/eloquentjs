@@ -1,3 +1,6 @@
 baseurl: /eloquentjs/
 collections:
   - intro
+  - client
+  - server
+  - examples

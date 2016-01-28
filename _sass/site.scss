@@ -2,14 +2,9 @@
 @import "code";
 @import "homepage";
 
-.subtitle {
-    font-size: 66%;
-    opacity: 0.6;
-}
-
 main.text.container {
     padding-top: 1rem;
-    padding-bottom: 6rem;
+    padding-bottom: 10rem;
 }
 
 .toc.toggler {
@@ -32,4 +27,14 @@ main.text.container {
     h3, h4 {
         margin-top: 3rem;
     }
+}
+
+.ui.sidebar {
+    .item:not(.active) > .menu {
+        display: none;
+    }
+}
+
+.small {
+    font-size: 0.9rem;
 }
