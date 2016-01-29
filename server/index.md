@@ -1,4 +1,5 @@
 ---
+title: Server
 layout: docs
 active: server
 ---

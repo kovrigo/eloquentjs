@@ -1,4 +1,5 @@
 ---
+title: Client
 layout: docs
 active: client
 ---
