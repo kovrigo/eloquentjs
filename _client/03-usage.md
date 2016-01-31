@@ -9,18 +9,18 @@ from the `Eloquent` global.
   <div class="ui right corner label"></div>
   {% highlight js %}
 var Post = Eloquent('Post');
-
-// or, if you prefer
-
+// or, as a property
 var Comment = Eloquent.Comment;
   {% endhighlight %}
 </div>
 
 <div class="ui basic tertiary segment">
-  Both styles are equally valid - the latter case invokes a getter function which is simply a wrapper around the former.
+  <p>
+    Models are not initialised as soon as they're defined, but rather upon first use.
+    For instance, defining the Comment model merely attaches a <code class="small">Comment</code> property with a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Custom_Setters_and_Getters">getter function</a>
+    to the <code class="small">Eloquent</code> object.
+  </p>
+  <p>
+    This allows you to include the configuration for <em>all</em> your models on every page with minimal cost.
+  </p>
 </div>
-
-Defining a model is relatively inexpensive - it simply stores the configuration.
-If and when a model is first used, it then undergoes a `boot` process.
-This means you can configure as many models as you want without causing a performance hit.
-

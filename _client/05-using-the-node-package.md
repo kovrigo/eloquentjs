@@ -58,7 +58,7 @@ export default Post;
 </div>
 
 <div class="ui basic secondary segment">
-  Using the node module is not required for this. You may prefer to use the
-  standard ES5 build included with the PHP package, then add your own logic
-  by modifying the prototypes.
+  Using the node module is not a requirement for extending <em>EloquentJs</em>.
+  You may prefer to use the standard ES5 build included with the PHP
+  package, then add your own logic by modifying the prototypes.
 </div>
