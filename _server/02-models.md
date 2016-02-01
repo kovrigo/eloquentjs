@@ -1,10 +1,12 @@
 ---
-title: Model setup
+title: Configure your models
 ---
 
-* Any subclass of `Illuminate\Database\Eloquent\Model` can be used with *EloquentJs*.
-* Models should implement [`EloquentJs\Model\AcceptsEloquentJsQueries`](https://github.com/parsnick/eloquentjs/blob/master/src/Model/AcceptsEloquentJsQueries.php).
-* You can use the included trait `EloquentJs\Model\EloquentJsQueries` to provide the implementation.
+Any Eloquent <code><abbr title="Illuminate\Database\Eloquent\Model">Model</abbr></code> can be used with *EloquentJs*.
+
+* Simply implement <code><abbr title="EloquentJs\Model\EloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+[<i class="tiny external icon" title="View on GitHub"></i>](https://github.com/parsnick/eloquentjs/blob/master/src/Model/AcceptsEloquentJsQueries.php)
+* You can use the <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code> trait to provide the implementation.
 
 For example, a `Post` model might look like:
 
@@ -48,15 +50,15 @@ class Post extends Model implements AcceptsEloquentJsQueries
     }
 
     /**
-     * Scope to results with a published date in the past.
+     * Scope a query to only include posts with a published date in the past.
      *
      * @param  $query
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopePublished($query)
     {
-        $query->whereDate('published_at', '<', \DB::raw('NOW()'))
-              ->whereNotNull('published_at');
+        return $query->whereDate('published_at', '<', \DB::raw('NOW()'))
+                     ->whereNotNull('published_at');
     }
 }
   {% endhighlight %}

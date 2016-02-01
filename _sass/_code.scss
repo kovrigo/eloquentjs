@@ -44,6 +44,7 @@
 }
 
 code:not([data-lang]) {
-  background: #eee;
+  background: rgba(#888, 0.3);
   border-radius: 2px;
+  padding: 0 1px;
 }
