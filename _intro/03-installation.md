@@ -6,8 +6,8 @@ title: Installation
 
 <div class="ui segment terminal sample">
     <div class="ui right corner label"></div>
-{% highlight bash %}
-composer require parsnick/eloquentjs:dev
+{% highlight console %}
+$ composer require parsnick/eloquentjs:dev
 {% endhighlight %}
 </div>
 
@@ -16,7 +16,7 @@ composer require parsnick/eloquentjs:dev
 <div class="ui segment php sample">
     <div class="ui right corner label"></div>
 {% highlight php startinline %}
-$providers = [
+'providers' => [
     // ...
     EloquentJs\EloquentJsServiceProvider::class,
     // ...

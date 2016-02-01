@@ -14,8 +14,8 @@ Whatever the reason, you can install with npm:
 
 <div class="ui segment terminal sample">
   <div class="ui right corner label"></div>
-{% highlight bash %}
-npm install laravel-eloquentjs
+{% highlight console %}
+$ npm install laravel-eloquentjs
 {% endhighlight %}
 </div>
 

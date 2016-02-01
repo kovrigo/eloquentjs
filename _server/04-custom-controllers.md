@@ -73,7 +73,7 @@ An incoming *EloquentJs* query will be rejected if it contains any other query m
 <div class="ui basic secondary segment">
   For the purposes of authorisation, syntactic sugar is ignored - in other words, if you specify
   <b>where</b> as an allowed method, then <b>whereNull</b>, <b>orWhere&hellip;</b>, etc. are all
-  allowed, and similarly <b>orderBy</b> also permits <b>latest</b> and <b>oldest</b>.
+  allowed. Similarly, <b>orderBy</b> also permits <b>latest</b> and <b>oldest</b>.
 </div>
 
 Of course, as well as the *methods* you may want to restrict the *arguments* as well.
@@ -93,10 +93,10 @@ Post::eloquentJs('where(status, active|draft)')->get();
 
 #### String-based rules
 
-* For more flexibility, you can use a couple of modifiers:
+* For more flexibility, you can use modifiers:
 
 |     | Description                       | Example                        |
-|:---:|:----------------------------------|:------------------------------:|
+|:---:|:----------------------------------|:-------------------------------|
 | `|` | match any one of multiple values  | `where(created_at|updated_at)` |
 | `*` | match anything                    | `orderBy(*, desc)`             |
 | `!` | match anything *except* the value | `orderBy(!private_score)`      |
@@ -104,7 +104,7 @@ Post::eloquentJs('where(status, active|draft)')->get();
 {: .ui.very.compact.celled.definition.table }
 
 <div class="ui basic secondary segment">
-  If a method is listed but not all arguments provided, <code>*</code> is assumed.
+  If a method is listed without arguments, <code>*</code> is assumed.
 </div>
 
 #### Array-based rules
@@ -130,13 +130,15 @@ Post::eloquentJs([
 <div class="ui segment php sample">
   <div class="ui right corner label"></div>
   {% highlight php startinline %}
-Post::eloquentJs(function (Builder $guard) use (User $user) {
+Post::eloquentJs(function (Builder $rules) use (User $user) {
 
-  $guard->allow('orderBy', ['public_score|published_at']);
+  $rules->allow('orderBy', ['public_score|published_at']);
 
   if ($user->isAdmin()) {
-    $guard->allow('where'); // allows any where clause
-    $guard->allow('orderBy'); // allows any orderBy clause
+
+    $rules->allow('where'); // allows any where clause
+    $rules->allow('orderBy'); // allows any orderBy clause
+
   }
 
 })->get();

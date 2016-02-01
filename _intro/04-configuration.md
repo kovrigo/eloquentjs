@@ -42,7 +42,7 @@ for your models.
 
 <div class="ui segment terminal sample">
     <div class="ui right corner label"></div>
-{% highlight bash %}
-php artisan eloquentjs:generate [--output="public/eloquent.js"]
+{% highlight console %}
+$ php artisan eloquentjs:generate [--output="public/eloquent.js"]
 {% endhighlight %}
 </div>

@@ -38,7 +38,7 @@ active: overview
   <div class="ui text container">
     <p>
       If you've already defined your models as part of a Laravel application, don't start from scratch with
-      your javascript. <em>EloquentJs</em> takes your existing configuration and provides client-side access
+      your javascript! <em>EloquentJs</em> takes your existing configuration and provides client-side access
       to your data with the same Eloquent API you already know.
     </p>
   </div>
