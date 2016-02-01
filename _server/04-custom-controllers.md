@@ -29,8 +29,8 @@ Post::take(50)     // default to show 50 but allow EloquentJs to override
   {% endhighlight %}
 </div>
 
-And since Eloquent models cast to JSON when returned from a controller, this makes implementing
-your own controller methods a breeze:
+And since Eloquent models automatically cast to JSON when returned from a controller,
+this makes implementing your own controller methods a breeze:
 
 <div class="ui segment php sample">
   <div class="ui right corner label"></div>
@@ -54,5 +54,106 @@ public function index()
   You might want to give it a quick look as a guide for your own resource controller.
 </div>
 
-#### Authorisation
 
+### Authorisation
+
+For finer control, the `eloquentJs()` scope takes an optional argument to describe which query methods are permitted:
+
+<div class="ui segment php sample">
+  <div class="ui right corner label"></div>
+  {% highlight php startinline %}
+Post::eloquentJs('where()')->get(); // only allow where() clauses
+
+Post::eloquentJs('where() orderBy()')->get(); // allow where() and orderBy()
+  {% endhighlight %}
+</div>
+
+An incoming *EloquentJs* query will be rejected if it contains any other query methods.
+
+<div class="ui basic secondary segment">
+  For the purposes of authorisation, syntactic sugar is ignored - in other words, if you specify
+  <b>where</b> as an allowed method, then <b>whereNull</b>, <b>orWhere&hellip;</b>, etc. are all
+  allowed, and similarly <b>orderBy</b> also permits <b>latest</b> and <b>oldest</b>.
+</div>
+
+Of course, as well as the *methods* you may want to restrict the *arguments* as well.
+Not a problem!
+
+<div class="ui segment php sample">
+  <div class="ui right corner label"></div>
+  {% highlight php startinline %}
+// Restrict to WHERE clauses on the published date
+Post::eloquentJs('where(published_at)')->get();
+
+// Restrict to WHERE clauses on the status column,
+// and only allow "active" and "draft" as values
+Post::eloquentJs('where(status, active|draft)')->get();
+  {% endhighlight %}
+</div>
+
+#### String-based rules
+
+* For more flexibility, you can use a couple of modifiers:
+
+|     | Description                       | Example                        |
+|:---:|:----------------------------------|:------------------------------:|
+| `|` | match any one of multiple values  | `where(created_at|updated_at)` |
+| `*` | match anything                    | `orderBy(*, desc)`             |
+| `!` | match anything *except* the value | `orderBy(!private_score)`      |
+| `<` | match a maximum (numeric) value   | `limit(<100)`                  |
+{: .ui.very.compact.celled.definition.table }
+
+<div class="ui basic secondary segment">
+  If a method is listed but not all arguments provided, <code>*</code> is assumed.
+</div>
+
+#### Array-based rules
+
+* You can also specify your rules as an array and use a closure to apply custom logic.
+* This example will only allow WHERE clauses against the **status** column and only if the value starts with **visible_**
+
+<div class="ui segment php sample">
+  <div class="ui right corner label"></div>
+  {% highlight php startinline %}
+Post::eloquentJs([
+  'where' => ['status', function ($value) {
+    return starts_with($value, 'visible_');
+  }],
+])->get();
+  {% endhighlight %}
+</div>
+
+#### Closure-based rules
+
+* If your rules are dynamic, you may prefer to use the <code>Builder</code>:
+
+<div class="ui segment php sample">
+  <div class="ui right corner label"></div>
+  {% highlight php startinline %}
+Post::eloquentJs(function (Builder $guard) use (User $user) {
+
+  $guard->allow('orderBy', ['public_score|published_at']);
+
+  if ($user->isAdmin()) {
+    $guard->allow('where'); // allows any where clause
+    $guard->allow('orderBy'); // allows any orderBy clause
+  }
+
+})->get();
+  {% endhighlight %}
+</div>
+
+
+### Setting default rules
+
+* If your rules are consistent between models, you want to set a default. Default rules
+can be passed to the <code>Factory</code> constructor, so just override this in your own
+service provider.
+
+* Take a look at `EloquentJsServiceProvider::setDefaultPolicy()`
+[<i class="tiny external icon"></i>](https://github.com/parsnick/eloquentjs/blob/master/src/EloquentJsServiceProvider.php#L106)
+to see how the package does this.
+
+*[Builder]: EloquentJs\Query\Policy\Builder
+*[Factory]: EloquentJs\Query\Policy\Factory
+*[User]: App\User
