@@ -37,7 +37,7 @@ this makes implementing your own controller methods a breeze:
   {% highlight php startinline %}
 /**
  * Get a listing of posts.
-
+ *
  * @return \Illuminate\Database\Eloquent\Collection
  */
 public function index()
