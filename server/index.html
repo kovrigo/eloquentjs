@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> EloquentJs </title>
+
+  <base href="/eloquentjs/">
+
+  <link rel="stylesheet" href="vendor/all.css">
+  <link rel="stylesheet" href="site.css">
+
+</head>
+<body class="docs pushable">
+
+  <div class="ui sidebar inverted left vertical restorable menu">
+
+  <div class="ui inverted icon menu">
+    <div class="right aligned item">
+      <i class="large close icon"></i>
+    </div>
+  </div>
+
+  <a href="." class="header item">EloquentJs</a>
+
+  <div class="item ">
+    <a href="getting-started/">Getting Started</a>
+      </div>
+
+  <div href="client" class="item ">
+    <a href="client/">Javascript library (client)</a>
+      </div>
+
+  <div href="server" class="item active">
+    <a href="server/">PHP package for Laravel (server)</a>
+      </div>
+
+  <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
+    <i class="github icon"></i>
+    View on GitHub
+  </a>
+
+</div>
+
+  <div class="pusher">
+    
+  <a class="toc toggler ui black icon button" title="Menu">
+    <i class="sidebar icon"></i>
+  </a>
+
+  <main class="ui main text container">
+
+    <div class="ui breadcrumb">
+      <a class="section" href=".">EloquentJs</a>
+      <i class="right angle icon divider"></i>
+      <div class="active section">Server</div>
+    </div>
+
+    
+  <h2 class="ui dividing header">Introduction</h2>
+  <p>The <em>EloquentJs</em> javascript library can make HTTP requests to fetch and submit data
+for your models, but that's only half the problem: the server still needs to interpret
+the incoming query and return the appropriate data.</p>
+
+<p>This is where the <code>parsnick/eloquentjs</code> PHP package comes in. Download with composer and add
+the service provider, as per the <a href="getting-started/#installation">Getting Started</a> guide.</p>
+  
+  <h2 class="ui dividing header">Configure your models</h2>
+  <p>Any Eloquent <code><abbr title="Illuminate\Database\Eloquent\Model">Model</abbr></code> can be used with <em>EloquentJs</em>.</p>
+
+<ul>
+<li>Simply implement <code><abbr title="EloquentJs\Model\EloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+<a href="https://github.com/parsnick/eloquentjs/blob/master/src/Model/AcceptsEloquentJsQueries.php"><i class="tiny external icon" title="View on GitHub"></i></a></li>
+<li>You can use the <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code> trait to provide the implementation.</li>
+</ul>
+
+<p>For example, a <code>Post</code> model might look like:</p>
+
+<pre><code class="language-php">&lt;?php
+
+namespace App;
+
+use EloquentJs\Model\AcceptsEloquentJsQueries;
+use EloquentJs\Model\EloquentJsQueries;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model implements AcceptsEloquentJsQueries
+{
+    use EloquentJsQueries;
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['published_at'];
+
+    /**
+     * Define relationship to comments.
+     *
+      * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this-&gt;hasMany(Comment::class);
+    }
+
+    /**
+     * Scope a query to only include posts with a published date in the past.
+     *
+     * @param  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePublished($query)
+    {
+        return $query-&gt;whereDate('published_at', '&lt;', \DB::raw('NOW()'))
+                     -&gt;whereNotNull('published_at');
+    }
+}
+</code></pre>
+  
+  <h2 class="ui dividing header">Usage with the built-in controller</h2>
+  <p>To get up and running as fast as possible, you don't even need to write a controller
+to handle your <em>EloquentJs</em> queries. The <code>eloquent</code> macro on the router takes a
+URI and an eloquent model, and sets up a RESTful resource controller similar to the native
+<code>Route::resource()</code>
+<a href="https://laravel.com/docs/5.2/controllers#restful-resource-controllers" title="Laravel documentation on RESTful resource controllers"><i class="tiny external icon"></i></a>.</p>
+
+<pre><code class="language-php">// app/Http/routes.php
+Route::eloquent('api/posts', App\Post::class);
+</code></pre>
+
+<p>You can even specify a subset of actions to handle, just like a regular resource controller:</p>
+
+<pre><code class="language-php">// For a read-only controller
+Route::eloquent('api/posts', App\Post::class, ['only' =&gt; ['show', 'index']]);
+
+// Or allow everything except deletions
+Route::eloquent('api/posts', App\Post::class, ['except' =&gt; ['destroy']]);
+</code></pre>
+
+<p>And that's all there is to it! Skip ahead to <a href="server/#create-your-eloquent-js-build">create your eloquent.js build</a> and start
+using Eloquent in the browser.</p>
+
+<div class="ui basic inverted orange tertiary segment">
+  <i class="red warning icon"></i>
+  <code>Route::eloquent()</code> allows any query to be executed. If you need finer control over which
+  queries are allowed, this can be easily achieved with your own resource controller - see below.
+</div>
+  
+  <h2 class="ui dividing header">Usage with your own controller</h2>
+  <p>For a real-world project, you'll likely want to use your own controller logic instead.
+Now that you've set up your models to implement
+<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>,
+it's trivial to apply an incoming <em>EloquentJs</em> query:</p>
+
+<pre><code class="language-php">$posts = Post::eloquentJs()-&gt;get();
+</code></pre>
+
+<p>Because the <code>eloquentJs()</code> call is just a regular <a href="https://laravel.com/docs/5.2/eloquent#local-scopes">Eloquent query scope <i class="tiny external icon"></i></a>,
+you can mix and match with other scopes and the standard query builder methods. Depending on where in the
+chain you call the eloquentJs scope, you can set a default value that may be overriden, or enforce certain conditions
+that should always apply:</p>
+
+<pre><code class="language-php">Post::take(50)     // default to show 50 but allow EloquentJs to override
+    -&gt;eloquentJs() // apply whatever conditions are set in the incoming query
+    -&gt;published()  // always require the posts to be published
+    -&gt;get();
+</code></pre>
+
+<p>And since Eloquent models automatically cast to JSON when returned from a controller,
+this makes implementing your own controller methods a breeze:</p>
+
+<pre><code class="language-php">/**
+ * Get a listing of posts.
+ *
+ * @return \Illuminate\Database\Eloquent\Collection
+ */
+public function index()
+{
+  return Post::take(50)-&gt;eloquentJs()-&gt;published()-&gt;get();
+}
+</code></pre>
+
+<div class="ui basic secondary segment">
+  Behind the scenes, <code>Route::eloquent()</code> registers a resource route that uses the package's own
+  <code><abbr title="EloquentJs\Controllerless\GenericController">GenericController</abbr></code>
+  <a href="https://github.com/parsnick/eloquentjs/blob/master/src/Controllerless/GenericController.php"><i class="tiny external icon"></i></a>.
+  You might want to give it a quick look as a guide for your own resource controller.
+</div>
+
+<h3>Authorisation</h3>
+
+<p>For finer control, the <code>eloquentJs()</code> scope takes an optional argument to describe which query methods are permitted:</p>
+
+<pre><code class="language-php">Post::eloquentJs('where()')-&gt;get(); // only allow where() clauses
+
+Post::eloquentJs('where() orderBy()')-&gt;get(); // allow where() and orderBy()
+</code></pre>
+
+<p>An incoming <em>EloquentJs</em> query will be rejected if it contains any other query methods.</p>
+
+<div class="ui basic secondary segment">
+  For the purposes of authorisation, syntactic sugar is ignored - in other words, if you specify
+  <b>where</b> as an allowed method, then <b>whereNull</b>, <b>orWhere&hellip;</b>, etc. are all
+  allowed. Similarly, <b>orderBy</b> also permits <b>latest</b> and <b>oldest</b>.
+</div>
+
+<p>Of course, as well as the <em>methods</em> you may want to restrict the <em>arguments</em> as well.
+Not a problem!</p>
+
+<pre><code class="language-php">// Restrict to WHERE clauses on the published date
+Post::eloquentJs('where(published_at)')-&gt;get();
+
+// Restrict to WHERE clauses on the status column,
+// and only allow "active" and "draft" as values
+Post::eloquentJs('where(status, active|draft)')-&gt;get();
+</code></pre>
+
+<h4>String-based rules</h4>
+
+<ul>
+<li>For more flexibility, you can use modifiers:</li>
+</ul>
+
+<table class="ui very compact celled definition table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>|</code></td>
+      <td>match any one of multiple values</td>
+      <td><code>where(created_at|updated_at)</code></td>
+    </tr>
+    <tr>
+      <td><code>*</code></td>
+      <td>match anything</td>
+      <td><code>orderBy(*, desc)</code></td>
+    </tr>
+    <tr>
+      <td><code>!</code></td>
+      <td>match anything <em>except</em> the value</td>
+      <td><code>orderBy(!private_score)</code></td>
+    </tr>
+    <tr>
+      <td><code>&lt;</code></td>
+      <td>match a maximum (numeric) value</td>
+      <td><code>limit(&lt;100)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="ui basic secondary segment">
+  If a rule specifies a method without arguments, <code>*</code> is assumed.
+</div>
+
+<h4>Array-based rules</h4>
+
+<ul>
+<li>You can also specify your rules as an array and use a closure to apply custom logic.</li>
+<li>This example will only allow WHERE clauses against the <strong>status</strong> column and only if the value starts with <strong>visible_</strong></li>
+</ul>
+
+<pre><code class="language-php">Post::eloquentJs([
+  'where' =&gt; ['status', function ($value) {
+    return starts_with($value, 'visible_');
+  }],
+])-&gt;get();
+</code></pre>
+
+<h4>Closure-based rules</h4>
+
+<ul>
+<li>If your rules are dynamic, you may prefer to use the <code>Builder</code>:</li>
+</ul>
+
+<pre><code class="language-php">Post::eloquentJs(function (Builder $rules) use (User $user) {
+
+  $rules-&gt;allow('orderBy', ['public_score|published_at']);
+
+  if ($user-&gt;isAdmin()) {
+
+    $rules-&gt;allow('where'); // allows any where clause
+    $rules-&gt;allow('orderBy'); // allows any orderBy clause
+
+  }
+
+})-&gt;get();
+</code></pre>
+
+<h3>Setting default rules</h3>
+
+<ul>
+<li><p>If your rules are consistent between models, you want to set a default. Default rules
+can be passed to the <code>Factory</code> constructor, so just override this in your own
+service provider.</p></li>
+<li><p>Take a look at <code>EloquentJsServiceProvider::setDefaultPolicy()</code>
+<a href="https://github.com/parsnick/eloquentjs/blob/master/src/EloquentJsServiceProvider.php#L106"><i class="tiny external icon"></i></a>
+to see how the package does this.</p></li>
+</ul>
+  
+  <h2 id="create-your-eloquent-js-build" class="ui dividing header">Create your eloquent.js build</h2>
+  <p>If you've read through the docs up to here, you already know how to use the <em>EloquentJs</em> package.</p>
+
+<ol>
+<li>Set up the server-side handling as described on this page.</li>
+<li>Configure and use the javascript library as described in the <a href="client/">client docs</a>.</li>
+</ol>
+
+<p>But there's more!</p>
+
+<ul>
+<li>Simply run the Artisan command to create a custom build of the eloquent.js library,
+pre-configured for the models in your Laravel application:</li>
+</ul>
+
+<pre><code class="language-bash">php artisan eloquentjs:generate
+</code></pre>
+
+<ul>
+<li>This scans your app directory for any classes implementing
+<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+and adds them to your eloquent.js build. Query scopes and date mutators are taken from the model
+class and added to the javascript config.</li>
+</ul>
+
+<div class="ui basic tertiary segment">
+  <i class="configure icon"></i> <code>@todo</code> include relations in the generated javascript
+</div>
+
+<ul>
+<li>By default all models are included. Pass a CSV list to specify which models you want in your eloquent.js build:</li>
+</ul>
+
+<pre><code class="language-bash">php artisan eloquentjs:generate --models=Post,Comment
+</code></pre>
+
+<ul>
+<li>The <code>--output</code> option can change where the generated eloquent.js is saved. The default is <code>public/eloquent.js</code>.</li>
+</ul>
+
+<h3>Endpoints</h3>
+
+<p>The most important configuration value for an <em>EloquentJs</em> model is the endpoint - that is, where should
+the javascript library send its HTTP requests. Or to put it another way, the URL that the resource
+controller for this model responds to.</p>
+
+<p>The javascript generator will try to work out the endpoint automatically, in order of precedence:</p>
+
+<ol>
+<li>If the Model returns a value from <code>getEndpoint()</code>, this is used as the endpoint.</li>
+</ol>
+
+<div class="ui basic secondary segment">
+      <p>
+        The interface <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+        requires a <code>getEndpoint()</code> method.
+      </p>
+      <p>
+        The provided <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
+        trait defers to an <code>$endpoint</code> property on the model. You can optionally set this property,
+        or provide your own <code>getEndpoint()</code> implementation, or leave it undefined.
+      </p>
+    </div>
+
+<ol start="2">
+<li>If <code>Route::eloquent($uri, $model)</code> is used for this model, the generator reads the endpoint from the router.</li>
+<li>If it's still unable to find an endpoint, you will be prompted to enter one when running the Artisan command.</li>
+</ol>
+
+<p>Once the Artisan command has an endpoint for each model, you'll be prompted to confirm the mapping:</p>
+
+<pre><code class="language-code">$ php artisan eloquentjs:generate
+
+Enter the endpoint to use for the 'App\Post' model:
+&gt; api/posts
+
++-------+-----------+
+| Model | Endpoint  |
++-------+-----------+
+| Post  | api/posts |
++-------+-----------+
+
+Generate javascript for these models and associated endpoints? (yes/no):
+&gt; y
+
+Javascript written to public/eloquent.js
+</code></pre>
+  
+  <h2 class="ui dividing header">Extending <em>EloquentJs</em></h2>
+  <div class="ui basic secondary segment">
+  This section relates to the server-side component of <em>EloquentJs</em>,
+  in particular how it's coupled to Laravel.
+  The client-side library has no such dependency and can be freely modified.
+</div>
+
+<p>The source files for the package are located in <a href="https://github.com/parsnick/eloquentjs/tree/master/src" class="ui label" title="View on GitHub"><i class="folder icon"></i> src/</a> and are organised as follows:</p>
+
+<div class="ui relaxed celled list">
+
+  <div class="item">
+    <i class="open folder icon"></i>
+    <div class="content">
+      <div class="header">Controllerless</div>
+      <div class="description">Enables <code class="small">Route::eloquent()</code> usage.</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="open folder icon"></i>
+    <div class="content">
+      <div class="header">Model</div>
+      <div class="description">Augments Eloquent models to support <em>EloquentJs</em></div>
+    </div>
+  </div>
+
+  <div class="item">
+   <i class="open folder icon"></i>
+    <div class="content">
+      <div class="header">Query</div>
+      <div class="description">Interprets, authorises and applies incoming <em>EloquentJs</em> queries</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="open folder icon"></i>
+    <div class="content">
+      <div class="header">ScriptGenerator</div>
+      <div class="description">Creates the eloquent.js build</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="file code outline icon"></i>
+    <div class="content">
+      <div class="header">EloquentJsServiceProvider</div>
+      <div class="description">Bootstraps the package for Laravel</div>
+    </div>
+  </div>
+
+</div>
+
+<p>The service provider <a href="https://github.com/parsnick/eloquentjs/blob/master/src/EloquentJsServiceProvider.php"><i class="tiny external icon"></i></a>
+is a good high-level introduction point to see how the package is put together. If you're not already
+familiar with Laravel's <a href="https://laravel.com/docs/5.2/container">service container</a>, it's worth reading
+up on before going much further.</p>
+
+<p>The rest of the package is namespaced as:</p>
+
+<ul>
+<li><code>Controllerless</code> is only relevant if you use the <code>Route::eloquent()</code> shortcut.
+If not, you can safely disregard this namespace.</li>
+<li><code>Model</code> contains the central component of the package:
+
+<ul>
+<li>The <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code> interface.</li>
+<li>The <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
+trait provides the default implementation - it simply fires an <code>EloquentJsWasCalled</code> event.</li>
+</ul></li>
+<li><code>Query</code> makes up the bulk of the package
+
+<ul>
+<li><code>Events</code> holds the single event in the package <code>EloquentJsWasCalled</code></li>
+<li><code>Guard</code> contains the logic for authorising a <code>Query</code></li>
+<li><code>Listeners</code> respond to the <code>EloquentJsWasCalled</code> event</li>
+<li><code>Interpreter</code> reads the current <code>Illuminate\Http\Request</code> and returns a <code>Query</code></li>
+<li><code>Query</code> is a plain object representing an <em>EloquentJs</em> query (i.e. one originating in javascript)</li>
+</ul></li>
+<li><code>ScriptGenerator</code> is exclusively concerned with the Artisan command that builds your eloquent.js.</li>
+</ul>
+
+<p>You can hook into the package wherever seems most sensible for your needs.</p>
+
+<ul>
+<li>Perhaps the most important binding in the service container is <code>eloquentjs.query</code>, and the first thing
+our provider does is set this up. You might like to replace this binding with a <code>Query</code> that you read
+from somewhere else.</li>
+<li><code>EloquentJsWasCalled</code> is triggered and listened for with Laravel's <a href="https://laravel.com/docs/5.2/events">event</a>
+system. You can of course add your own listeners, and control the order the listeners run with
+the <a href="https://laravel.com/api/5.2/Illuminate/Contracts/Events/Dispatcher.html#method_listen">$priority</a>
+argument.</li>
+<li>You can even bypass the default event-based handling altogether, and provide your own
+implementation of <code>AcceptsEloquentJsQueries</code> without using the package's trait.</li>
+</ul>
+  
+
+  </main>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="vendor/all.js"></script>
+  <script>
+
+    $(document).ready(function() {
+
+      $('.help.popup').popup();
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.toggler')
+        .sidebar('attach events', '.ui.sidebar .close.icon')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('setting', 'dimPage', false)
+        .sidebar('setting', 'closable', false)
+        .sidebar('setting', 'onChange', rememberState)
+      ;
+
+      // Restore sidebar state
+      if (cookie.get('sidebar_open')) $('.ui.restorable.sidebar').sidebar('show');
+
+      // Highlight current section in sidebar
+      $('main.ui.text.container h2')
+        .visibility({
+          onTopPassed: function () {
+            setActiveItem(this.id);
+          },
+          onTopPassedReverse: function () {
+            var previous = $(this).prevAll('h2').first().attr('id');
+            if (previous) setActiveItem(previous);
+          },
+          once: false
+        });
+    });
+
+    function rememberState()
+    {
+      if ($(this).sidebar('is hidden'))
+        cookie.set('sidebar_open', true, { path: '/eloquentjs/' });
+      else
+        cookie.set('sidebar_open', '', { path: '/eloquentjs/' });
+    }
+
+    function setActiveItem(name)
+    {
+      $('.ui.sidebar.menu a').each(function () {
+        var $this = $(this);
+        if (name && $this.attr('href').indexOf('#'+name) >= 0) {
+          $this.addClass('active');
+        } else {
+          $this.removeClass('active');
+        }
+      });
+    }
+
+  </script>
+
+  </body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> EloquentJs </title>
+
+  <base href="/eloquentjs/">
+
+  <link rel="stylesheet" href="vendor/all.css">
+  <link rel="stylesheet" href="site.css">
+
+</head>
+<body class="docs pushable">
+
+  <div class="ui sidebar inverted left vertical restorable menu">
+
+  <div class="ui inverted icon menu">
+    <div class="right aligned item">
+      <i class="large close icon"></i>
+    </div>
+  </div>
+
+  <a href="." class="header item">EloquentJs</a>
+
+  <div class="item ">
+    <a href="getting-started/">Getting Started</a>
+      </div>
+
+  <div href="client" class="item active">
+    <a href="client/">Javascript library (client)</a>
+      </div>
+
+  <div href="server" class="item ">
+    <a href="server/">PHP package for Laravel (server)</a>
+      </div>
+
+  <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
+    <i class="github icon"></i>
+    View on GitHub
+  </a>
+
+</div>
+
+  <div class="pusher">
+    
+  <a class="toc toggler ui black icon button" title="Menu">
+    <i class="sidebar icon"></i>
+  </a>
+
+  <main class="ui main text container">
+
+    <div class="ui breadcrumb">
+      <a class="section" href=".">EloquentJs</a>
+      <i class="right angle icon divider"></i>
+      <div class="active section">Client</div>
+    </div>
+
+    
+  <h2 class="ui dividing header">Introduction</h2>
+  <p>The client library provides the familiar Eloquent API in javascript.
+It handles building queries with fluent syntax, making HTTP requests
+to the server, and interpreting the responses.</p>
+
+<p>The complete source for the client-side library can be found at
+<a href="https://github.com/parsnick/eloquentjs-client">github.com/parsnick/eloquentjs-client</a>.</p>
+  
+  <h2 class="ui dividing header">Manual configuration</h2>
+  <p><em>EloquentJs</em> is unopinionated about the actual back-end implementation - all it
+needs is a RESTful endpoint for each model. For usage outside Laravel, you can configure
+your models manually.</p>
+
+<ul>
+<li>Load the core <code>eloquent.js</code> library</li>
+<li>Use the <code>Eloquent(name, options)</code> global to define your model.</li>
+<li>Each model requires a RESTful endpoint. Additional configuration is optional.</li>
+</ul>
+
+<pre><code class="language-js">Eloquent('Post', {
+    endpoint: '/api/posts',  // URL that accepts queries for this model
+    dates: ['published_at'], // columns to mutate to Date instances
+    scopes: ['published'],   // the available query scope methods
+    relations: {             // map of `relationshipName: relatedModelName`
+        comments: 'Comment'
+    }
+});
+
+Eloquent('Comments', {
+    endpoint: '/api/posts',
+    relations: {
+        post: 'Post'
+    }
+});
+</code></pre>
+
+<div class="ui basic tertiary segment">
+    The package for Laravel includes the latest build of eloquent.js, and has
+    an Artisan command that generates the configuration automatically by looking
+    at the model classes in your application.
+</div>
+  
+  <h2 class="ui dividing header">Usage</h2>
+  <p>Once configured (either manually or with the Artisan command) you can access each model
+from the <code>Eloquent</code> global.</p>
+
+<pre><code class="language-js">var Post = Eloquent('Post');
+// or, as a property
+var Comment = Eloquent.Comment;
+</code></pre>
+
+<div class="ui basic tertiary segment">
+  <p>
+    Models are not initialised as soon as they're defined, but rather upon first use.
+    For instance, defining the Comment model merely attaches a <code class="small">Comment</code> property with a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Custom_Setters_and_Getters">getter function</a>
+    to the <code class="small">Eloquent</code> object.
+  </p>
+  <p>
+    This allows you to include the configuration for <em>all</em> your models on every page with minimal cost.
+  </p>
+</div>
+  
+  <h2 class="ui dividing header">Supported features</h2>
+  <p>Executing any query in <em>EloquentJs</em> is inevitably asynchronous since it requires
+a round trip to the server and back. This accounts for the most obvious difference
+between our client-side implementation and Laravel's Eloquent - any method that causes
+a query to run will always return a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>
+rather than the result directly.</p>
+
+<div class="ui two column grid">
+  <div class="column">
+<pre><code class="language-php">$post = Post::find(1);
+
+var_dump($post);
+</code></pre>
+  </div>
+  <div class="column">
+<pre><code class="language-js">Post.find(1).then(function (post) {
+  console.log(post);
+});
+</code></pre>
+  </div>
+</div>
+
+<p><br><br />
+<br></p>
+
+<p>The main Eloquent features are supported as described below. Note that the
+existence of a method in the client-side API does not necesssarily mean the
+server will allow the method to be called.</p>
+
+<p><br></p>
+
+<div class="ui basic secondary small segment">
+  <div class="ui three column grid">
+    <div class="column">
+      <h4 class="ui header">
+        <i class="green checkmark box icon"></i> Supported
+      </h4>
+      <p>Feature is supported and implemented in the current version.</p>
+    </div>
+    <div class="column">
+      <h4 class="ui header">
+        <i class="red minus square box icon"></i> Unsupported
+      </h4>
+      <p>Feature is deliberately unsupported, usually for security considerations.</p>
+    </div>
+    <div class="column">
+      <h4 class="ui header">
+        <i class="minus square outline box icon"></i> Not implemented
+      </h4>
+      <p>Feature is not yet implemented but may be in future.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Query Builder</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Basic builder methods that use PDO parameter binding to protect against SQL injection:
+      <p>
+        <code class="small">select()</code>,
+        <code class="small">distinct()</code>,
+        <code class="small">where()</code>,
+        <code class="small">having()</code>,
+        <code class="small">orderBy()</code>,
+        <code class="small">offset()</code>,
+        <code class="small">limit()</code>,
+        &hellip;
+      </p>
+      <p>
+        Sugary methods are also supported:
+        <code class="small">orWhereNotNull()</code>,
+        <code class="small">latest()</code>,
+        <code class="small">forPage()</code>,
+        &hellip;
+      </p>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="red minus square icon"></i>
+    <div class="content">
+      Builder methods that allow raw SQL:
+      <p>
+        <code class="small">selectRaw()</code>,
+        <code class="small">whereRaw()</code>,
+        <code class="small">havingRaw()</code>,
+        &hellip;
+      </p>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="red minus square icon"></i>
+    <div class="content">
+      Builder methods that perform joins to an arbitrary table:
+      <p>
+        <code class="small">join()</code>,
+        <code class="small">leftJoin()</code>,
+        &hellip;
+      </p>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="minus square outline icon"></i>
+    <div class="content">
+      Builder methods that perform unions:
+      <p>
+        <code class="small">union()</code>,
+        <code class="small">unionAll()</code>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<h3>Collections</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="minus outline square icon"></i>
+    <div class="content">
+      Queries that fetch multiple rows will return a native <code class="small">Array</code>.
+      There is no equivalent to <code class="small">Illuminate\Database\Eloquent\Collection</code>.
+    </div>
+  </div>
+
+</div>
+
+<h3>Retrieving Single Models</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Fetches a model by primary key with <code class="small">find()</code>:
+<pre><code class="language-js">Post.find(1).then(function (post) {
+  console.log(post);
+});</code></pre>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Fetches the first matching row with <code class="small">first()</code>:
+<pre><code class="language-js">Post.where('visible', true).first().then(function (post) {
+  console.log(post);
+});</code></pre>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Not found exceptions thrown if no results found:
+      <p>
+        <code class="small">firstOrFail()</code>,
+        <code class="small">findOrFail()</code>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<h3>Retrieving Aggregates</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="minus outline square icon"></i>
+    <div class="content">
+      Aggregate functions:
+      <p>
+        <code class="small">count()</code>,
+        <code class="small">sum()</code>,
+        <code class="small">min()</code>,
+        <code class="small">max()</code>,
+        <code class="small">avg()</code>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<h3>Inserting &amp; Updating</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Basic inserts and mass assignments:
+<pre><code class="language-js">var post = new Post();
+post.title = 'My first post';
+post.save();
+// or
+Post.create({ title: 'My first post' });</code></pre>
+      <div class="small ui basic secondary segment">
+        Both syntaxes are equivalent in <em>EloquentJs</em>, unlike in server-side Eloquent.
+        <br>
+        Models created client-side are always subject to the server-side mass assignment protection.
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Updates an existing model
+<pre><code class="language-js">// Post.find(1).then(post => {
+  post.title = 'My first updated post';
+  post.save();
+  // or
+  post.update({ title: 'update' });
+// });</code></pre>
+      <div class="small ui basic secondary segment">
+        Both syntaxes are equivalent in <em>EloquentJs</em>, unlike in server-side Eloquent.
+        <br>
+        Models updated client-side are always subject to the server-side mass assignment protection.
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Updates any number of models matching a query
+<pre><code class="language-js">Post.whereNull('reviewed_at')
+    .whereNotNull('published_at')
+    .update({ visible: false });</code></pre>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="minus square outline icon"></i>
+    <div class="content">
+      Other creation methods:
+      <p>
+        <code class="small">firstOrNew()</code>,
+        <code class="small">firstOrCreate()</code>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<h3>Deleting</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Deletes an existing model
+<pre><code class="language-js">// Post.find(1).then(post => {
+  post.delete();
+// });</code></pre>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Deletes any number of models matching a query
+<pre><code class="language-js">Post.where('visible', false).delete();</code></pre>
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="minus outline square icon"></i>
+    <div class="content">
+      Soft deletes
+    </div>
+  </div>
+
+</div>
+
+<h3>Query Scopes</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="minus outline square icon"></i>
+    <div class="content">
+      Global scopes are respected by the server-side package, but
+      cannot be removed by <em>EloquentJs</em>.
+    </div>
+  </div>
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Local scopes, including dynamic scopes:
+
+<pre><code class="language-php">// app/Post.php
+class Post {
+  public function scopeAuthoredBy($query, $authorId) { /* ... */ }
+}</code></pre>
+
+<pre><code class="language-js">// javascript
+Post.authoredBy(42).get();</code></pre>
+    </div>
+  </div>
+
+</div>
+
+<div class="ui basic secondary segment">
+  <i class="info circle icon"></i>
+  Only scalar values are allowed. This will not work:
+
+<pre><code class="language-js">var user = { id: 1, name: 'Bob' };
+Post.authoredBy(user).get();</code></pre>
+
+</div>
+
+<h3>Events</h3>
+
+<div class="ui very relaxed celled list">
+
+  <div class="item">
+    <i class="green checkmark box icon"></i>
+    <div class="content">
+      Model events:
+      <p>
+        <code class="small">creating</code>,
+        <code class="small">created</code>,
+        <code class="small">updating</code>,
+        <code class="small">updated</code>,
+        <code class="small">saving</code>,
+        <code class="small">saved</code>,
+        <code class="small">deleting</code>,
+        <code class="small">deleted</code>
+      </p>
+<pre><code class="language-js">Post.creating(function (post) {
+  return !! post.title; // validate the post
+});
+
+Post.create({ body: 'Hello' }); // will not be created</code></pre>
+    </div>
+  </div>
+
+</div>
+  
+  <h2 class="ui dividing header">Using the node package</h2>
+  <p>For advanced usage, you can use <em>EloquentJs</em> as a node module and customise the build
+process. The default build uses <a href="http://browserify.org/">browserify</a> - check the build script in
+<a href="https://github.com/parsnick/eloquentjs-client/blob/master/package.json">package.json</a>
+for the exact command.</p>
+
+<p>Perhaps you want to use the ES6 class syntax to augment your models, or maybe
+you just want to exclude some of the default components from your build.</p>
+
+<p>Whatever the reason, you can install with npm:</p>
+
+<pre><code class="language-bash">npm install laravel-eloquentjs
+</code></pre>
+
+<p>And then you can import and extend whichever components you want:</p>
+
+<pre><code class="language-js">// javascript/Post.js
+import { Model } from 'laravel-eloquentjs';
+import Comment from './Comment';
+
+class Post extends Model {
+
+  /**
+   * Comment on this post.
+
+   * @param {string} message
+   * @return {Promise}
+   */
+  addComment(message) {
+    let attributes = {
+      message
+    };
+
+    attributes.post_id = this.getKey();
+
+    return Comment.create(attributes);
+  }
+
+}
+
+// Configuration for the model - that is, anything that would be
+// passed as `options` to `Eloquent(name, options)` during normal
+// usage - should be attached to its constructor.
+Post.endpoint = '/api/posts';
+
+export default Post;
+</code></pre>
+
+<div class="ui basic secondary segment">
+  Using the node module is not a requirement for extending <em>EloquentJs</em>.
+  You may prefer to use the standard ES5 build included with the PHP
+  package, then add your own logic by modifying the prototypes.
+</div>
+  
+  <h2 class="ui dividing header">API documentation</h2>
+  <p>Auto-generated API docs for the library are available at
+<a href="https://doc.esdoc.org/github.com/parsnick/eloquentjs-client/">https://doc.esdoc.org/github.com/parsnick/eloquentjs-client/</a></p>
+  
+  <div class="ui divider"></div>
+  
+  <div class="ui basic clearing segment">
+      <a href="server/" class="ui right floated right labeled icon button">
+        <i class="right arrow icon"></i>
+        Docs for the PHP package
+      </a>
+  </div>
+
+
+  </main>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="vendor/all.js"></script>
+  <script>
+
+    $(document).ready(function() {
+
+      $('.help.popup').popup();
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.toggler')
+        .sidebar('attach events', '.ui.sidebar .close.icon')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('setting', 'dimPage', false)
+        .sidebar('setting', 'closable', false)
+        .sidebar('setting', 'onChange', rememberState)
+      ;
+
+      // Restore sidebar state
+      if (cookie.get('sidebar_open')) $('.ui.restorable.sidebar').sidebar('show');
+
+      // Highlight current section in sidebar
+      $('main.ui.text.container h2')
+        .visibility({
+          onTopPassed: function () {
+            setActiveItem(this.id);
+          },
+          onTopPassedReverse: function () {
+            var previous = $(this).prevAll('h2').first().attr('id');
+            if (previous) setActiveItem(previous);
+          },
+          once: false
+        });
+    });
+
+    function rememberState()
+    {
+      if ($(this).sidebar('is hidden'))
+        cookie.set('sidebar_open', true, { path: '/eloquentjs/' });
+      else
+        cookie.set('sidebar_open', '', { path: '/eloquentjs/' });
+    }
+
+    function setActiveItem(name)
+    {
+      $('.ui.sidebar.menu a').each(function () {
+        var $this = $(this);
+        if (name && $this.attr('href').indexOf('#'+name) >= 0) {
+          $this.addClass('active');
+        } else {
+          $this.removeClass('active');
+        }
+      });
+    }
+
+  </script>
+
+  </body>
+</html>

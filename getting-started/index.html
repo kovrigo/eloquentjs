@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> EloquentJs </title>
+
+  <base href="/eloquentjs/">
+
+  <link rel="stylesheet" href="vendor/all.css">
+  <link rel="stylesheet" href="site.css">
+
+</head>
+<body class="docs pushable">
+
+  <div class="ui sidebar inverted left vertical restorable menu">
+
+  <div class="ui inverted icon menu">
+    <div class="right aligned item">
+      <i class="large close icon"></i>
+    </div>
+  </div>
+
+  <a href="." class="header item">EloquentJs</a>
+
+  <div class="item active">
+    <a href="getting-started/">Getting Started</a>
+      </div>
+
+  <div href="client" class="item ">
+    <a href="client/">Javascript library (client)</a>
+      </div>
+
+  <div href="server" class="item ">
+    <a href="server/">PHP package for Laravel (server)</a>
+      </div>
+
+  <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
+    <i class="github icon"></i>
+    View on GitHub
+  </a>
+
+</div>
+
+  <div class="pusher">
+    
+  <a class="toc toggler ui black icon button" title="Menu">
+    <i class="sidebar icon"></i>
+  </a>
+
+  <main class="ui main text container">
+
+    <div class="ui breadcrumb">
+      <a class="section" href=".">EloquentJs</a>
+      <i class="right angle icon divider"></i>
+      <div class="active section">Getting Started</div>
+    </div>
+
+    
+  <h2 class="ui dividing header">Introduction</h2>
+  <p><em>EloquentJs</em> brings your existing <a href="https://laravel.com/docs/5.2/eloquent">Eloquent ORM</a> to the browser.
+When you've already defined your models as part of a Laravel application, <em>EloquentJs</em> takes your existing
+configuration and gives you access to your data from javascript via the same Eloquent API you already know.</p>
+
+  <h2 class="ui dividing header">Requirements</h2>
+  <ul>
+<li>Laravel >= 5.2</li>
+</ul>
+
+  <h2 class="ui dividing header">Installation</h2>
+  <ul>
+<li>The package is available on <a href="https://packagist.org/packages/parsnick/eloquentjs">Packagist</a>. Install with composer.</li>
+</ul>
+
+<pre><code class="language-bash">composer require parsnick/eloquentjs:dev-master
+</code></pre>
+
+<ul>
+<li>Add the service provider to <code>config/app.php</code> <strong>before</strong> your application's <code>RouteServiceProvider</code>.</li>
+</ul>
+
+<pre><code class="language-php">'providers' =&gt; [
+    // ...
+    EloquentJs\EloquentJsServiceProvider::class,
+    // ...
+];
+</code></pre>
+
+  <h2 class="ui dividing header">Set up / configuration</h2>
+  <h4>Edit your model classes to accept queries from EloquentJs</h4>
+
+<ul>
+<li>Implement the <code>AcceptsEloquentJsQueries</code> interface.</li>
+<li>You can use the <code>EloquentJsQueries</code> trait to provide the implementation.</li>
+</ul>
+
+<pre><code class="language-php">use EloquentJs\Model\AcceptsEloquentJsQueries;
+use EloquentJs\Model\EloquentJsQueries;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model implements AcceptsEloquentJsQueries {
+    use EloquentJsQueries;
+}
+</code></pre>
+
+<h4>Create routes to handle queries from EloquentJs</h4>
+
+<ul>
+<li>EloquentJs needs a controller to perform CRUD operations.</li>
+<li>You can use the <code>eloquent</code> macro to set one up automatically.</li>
+</ul>
+
+<pre><code class="language-php">// app/Http/routes.php
+Route::eloquent('api/posts', App\Post::class);
+</code></pre>
+
+<h4>Generate a custom eloquent.js build</h4>
+
+<ul>
+<li>Use the artisan command to build a version of EloquentJs pre-configured
+for your models.</li>
+</ul>
+
+<pre><code class="language-bash">php artisan eloquentjs:generate [--output="public/eloquent.js"]
+</code></pre>
+
+  <h2 class="ui dividing header">Usage</h2>
+  <ul>
+  <li>Simply include the javascript file generated above to start using Eloquent in the browser.</li>
+  <li>You can access models as properties of the `Eloquent` global.</li>
+</ul>
+
+<pre><code class="language-js">var Post = Eloquent.Post;
+
+// Fetch the last updated post
+Post.where('archived', false)
+    .orderBy('updated_at', 'desc')
+    .first()
+    .then(logResult);
+
+
+// Update the first post
+Post.find(1).then(function (post) {
+    post.update({
+        title: prompt('Enter a new title')
+    });
+});
+
+
+// Add a listener to the 'saving' event
+Post.saving(validatePost);
+
+
+// Make a new post instance using the constructor
+var myPost = new Post({
+    title: 'A new post',
+    body: 'Hello'
+});
+
+// Save the post
+if (confirm('Save post?')) {
+    myPost.save().then(function (post) {
+        console.log('saved!');
+    });
+}
+
+
+function logResult(result) {
+    console.log(result);
+}
+function validatePost(post) {
+    if ( ! post.title) return false;
+}</code></pre>
+
+  <h2 class="ui dividing header">Next steps</h2>
+  <div class="ui two column relaxed grid">
+  <div class="column">
+    <p>
+      For more on the client-side API that EloquentJs provides, check out the client documentation.
+    </p>
+    <p>
+      <a href="client/" class="ui right labeled fluid icon button">
+        <i class="right arrow icon"></i>
+        Docs for the Javascript API
+      </a>
+    </p>
+  </div>
+  <div class="column">
+    <p>
+      For more on the PHP package for Laravel, check out the server documentation.
+    </p>
+    <p>
+      <a href="server/" class="ui right labeled fluid icon button">
+        <i class="right arrow icon"></i>
+        Docs for the PHP package
+      </a>
+    </p>
+  </div>
+</div>
+  
+
+  </main>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="vendor/all.js"></script>
+  <script>
+
+    $(document).ready(function() {
+
+      $('.help.popup').popup();
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.toggler')
+        .sidebar('attach events', '.ui.sidebar .close.icon')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('setting', 'dimPage', false)
+        .sidebar('setting', 'closable', false)
+        .sidebar('setting', 'onChange', rememberState)
+      ;
+
+      // Restore sidebar state
+      if (cookie.get('sidebar_open')) $('.ui.restorable.sidebar').sidebar('show');
+
+      // Highlight current section in sidebar
+      $('main.ui.text.container h2')
+        .visibility({
+          onTopPassed: function () {
+            setActiveItem(this.id);
+          },
+          onTopPassedReverse: function () {
+            var previous = $(this).prevAll('h2').first().attr('id');
+            if (previous) setActiveItem(previous);
+          },
+          once: false
+        });
+    });
+
+    function rememberState()
+    {
+      if ($(this).sidebar('is hidden'))
+        cookie.set('sidebar_open', true, { path: '/eloquentjs/' });
+      else
+        cookie.set('sidebar_open', '', { path: '/eloquentjs/' });
+    }
+
+    function setActiveItem(name)
+    {
+      $('.ui.sidebar.menu a').each(function () {
+        var $this = $(this);
+        if (name && $this.attr('href').indexOf('#'+name) >= 0) {
+          $this.addClass('active');
+        } else {
+          $this.removeClass('active');
+        }
+      });
+    }
+
+  </script>
+
+  </body>
+</html>
