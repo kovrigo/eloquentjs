@@ -1,0 +1,21 @@
+// Hide sidebar if not enough room
+@media screen and (max-width: 1220px) {
+  .docs .toc.toggler, .docs .ui.sidebar {
+    display: none !important;
+  }
+}
+
+.docs {
+  .ui.main.text.container {
+    padding-top: 1em;
+    padding-bottom: 10em;
+  }
+
+  h2.ui.header {
+    margin-top: 4rem;
+  }
+
+  h3, h4 {
+    margin-top: 3rem;
+  }
+}

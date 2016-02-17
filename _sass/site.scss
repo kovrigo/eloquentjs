@@ -1,0 +1,20 @@
+@import "homepage";
+@import "homepage.console";
+@import "prism.custom";
+@import "docs";
+
+.toc.toggler {
+  position: fixed;
+  cursor: pointer;
+  top: 1rem;
+  left: 1rem;
+}
+
+.ui.sidebar.left.menu {
+  .ui.button {
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    right: 0;
+  }
+}

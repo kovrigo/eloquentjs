@@ -1,0 +1,94 @@
+//
+// Styles for the console animation on the homepage
+//
+@keyframes typing {
+  from {
+    width: 100%
+  }
+  to {
+    width: 0
+  }
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent
+  }
+  50% {
+    border-color: black
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 0.8
+  }
+}
+
+.dev.console {
+  $characters: 54;
+  $duration: 5;
+  $background: white;
+  font: 1.1rem Consolas, monospace;
+  background: $background;
+  padding: 1em;
+
+  & > div {
+    position: relative;
+    color: #333;
+    margin: 0.5em 0 0.5em 1em;
+    float: left;
+
+    & > .icon {
+      position: absolute;
+      left: -1.4em;
+    }
+
+    &.input {
+      & > span {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        background: $background;
+        border-left: .1em solid black;
+        box-sizing: border-box;
+        animation: typing #{$duration}s steps($characters, end),
+        blink-caret 1s /* iterations: */
+        $duration step-end forwards;
+      }
+    }
+
+    &.output, &.log {
+      font-style: italic;
+      font-size: 0.96em;
+    }
+
+    &.output {
+      padding-bottom: 1em;
+      border-bottom: 1px solid #eee;
+      animation: appear 0s #{$duration}s step-end both;
+    }
+
+    &.log {
+      margin-left: 3em;
+      animation: appear 0s #{$duration+1}s step-end both;
+    }
+  }
+
+  .purple {
+    color: purple
+  }
+  .red {
+    color: #CC0000
+  }
+  .grey {
+    color: grey
+  }
+  .blue {
+    color: blue
+  }
+}
