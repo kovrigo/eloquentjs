@@ -1,5 +1,6 @@
 {
     "name": "parsnick/eloquentjs",
+    "description": "Brings the Eloquent ORM from the Laravel framework to the browser.",
     "autoload": {
         "psr-4": {
             "EloquentJs\\": "src/"
