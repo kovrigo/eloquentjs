@@ -22,6 +22,11 @@
     <a href="server/">PHP package for Laravel (server)</a>
     @yield('sidebar:server')
   </div>
+  
+  <div href="examples" class="item @yield('sidebar:examples:class')">
+    <a href="examples/">Examples</a>
+    @yield('sidebar:examples')
+  </div>
 
   <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
     <i class="github icon"></i>

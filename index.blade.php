@@ -13,6 +13,7 @@
       <a class="item" href="getting-started">Getting Started</a>
       <a class="item" href="client">Client</a>
       <a class="item" href="server">Server</a>
+      <a class="item" href="examples">Examples</a>
       <div class="right item">
         <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
           <i class="github icon"></i>
