@@ -6,14 +6,18 @@ Brings the Eloquent ORM from the [Laravel framework](https://github.com/laravel/
 
 ## Documentation
 
-parsnick.github.io/eloquentjs
+Full documentation for the package can be found at the [parsnick.github.io/eloquentjs](http://parsnick.github.io/eloquentjs).
 
-## Install
+## Quickstart
+
+#### Install
+
 ```
 composer require parsnick/eloquentjs:dev
 ```
 and add the service provider
-```
+
+```php
 // config/app.php
 'providers' => [
     // ...
@@ -25,7 +29,7 @@ and add the service provider
 ],
 ```
 
-## Usage
+#### Usage
 
 1. **Implement `EloquentJs\Model\AcceptsEloquentJsQueries`**
     
@@ -112,8 +116,8 @@ and add the service provider
     });
     ```
 
-## Contributing
+#### Contributing
 All contributions welcome. For anything related to the companion javascript library, please use [parsnick/eloquentjs-client](https://github.com/parsnick/eloquentjs-client).
 
-## License
+#### License
 MIT
