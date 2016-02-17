@@ -1,0 +1,16 @@
+source:
+    directory: docs/src
+    git:
+        url: 'git@github.com:parsnick/eloquentjs.git'
+        branch: gh-pages-src
+
+build:
+    directory: docs/build
+
+deploy:
+    git:
+        url: 'git@github.com:parsnick/eloquentjs.git'
+        branch: gh-pages
+
+serve:
+    subdirectory: eloquentjs
