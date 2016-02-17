@@ -1,5 +1,5 @@
 # EloquentJs
-[![Build Status](https://scrutinizer-ci.com/g/parsnick/eloquentjs/badges/build.png?b=master)](https://scrutinizer-ci.com/g/parsnick/eloquentjs/build-status/master)
+[![Build Status](https://travis-ci.org/parsnick/eloquentjs.svg?branch=master)](https://travis-ci.org/parsnick/eloquentjs)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/parsnick/eloquentjs/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/parsnick/eloquentjs/?branch=master)
 
 Brings the Eloquent ORM from the [Laravel framework](https://github.com/laravel/framework) to the browser.
