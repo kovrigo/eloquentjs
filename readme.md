@@ -13,7 +13,7 @@ Full documentation for the package can be found at the [parsnick.github.io/eloqu
 #### Install
 
 ```
-composer require parsnick/eloquentjs:dev
+composer require parsnick/eloquentjs:dev-master
 ```
 and add the service provider
 
