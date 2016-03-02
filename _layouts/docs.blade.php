@@ -20,4 +20,13 @@
     @yield('content')
 
   </main>
+
 @stop
+
+@push('scripts')
+  <script>
+    $(function () {
+      $('.ui.main table:not(.table)').addClass('ui compact celled table');
+    });
+  </script>
+@endpush

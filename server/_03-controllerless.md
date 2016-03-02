@@ -22,6 +22,24 @@ Route::eloquent('api/posts', App\Post::class, ['except' => ['destroy']]);
 And that's all there is to it! Skip ahead to [create your eloquent.js build](server/#create-your-eloquent-js-build) and start
 using Eloquent in the browser.
 
+### Actions handled by Route::eloquent()
+
+There are a couple of differences from the set of routes handled by a native Laravel `Route::resource()`.
+
+1. Trivially, the `create` and `edit` actions - which would normally display a form to the user - do not exist in *EloquentJs*. 
+2. Less obviously, two new actions `updateAll` and `destroyAll` are introduced. These enable write queries against
+multiple records at once, for example `Eloquent.Post.where(<something>).update({ visible: false })`.
+
+| Verb      | Path            | Action     |
+|-----------|-----------------|------------|
+| GET       | `/posts`        | index      |
+| POST      | `/posts`        | store      |
+| GET       | `/posts/{post}` | show       |
+| PUT/PATCH | `/posts/{post}` | update     |
+| DELETE    | `/posts/{post}` | destroy    |
+| PUT/PATCH | `/posts`        | updateAll  |
+| DELETE    | `/posts`        | destroyAll | 
+
 <div class="ui basic inverted orange tertiary segment">
   <i class="red warning icon"></i>
   <code>Route::eloquent()</code> allows any query to be executed. If you need finer control over which

@@ -9,6 +9,10 @@
   .ui.main.text.container {
     padding-top: 1em;
     padding-bottom: 10em;
+
+    & > pre {
+      margin: 2em 0;
+    }
   }
 
   h2.ui.header {

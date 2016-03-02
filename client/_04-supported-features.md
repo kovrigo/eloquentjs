@@ -20,11 +20,10 @@ var_dump($post);
   </div>
 </div>
 
-<br>  
-<br>  
+<br>
 
 The main Eloquent features are supported as described below. Note that the
-existence of a method in the client-side API does not necesssarily mean the
+existence of a method in the client-side API does not necessarily mean the
 server will allow the method to be called.
 
 <br>
@@ -127,7 +126,8 @@ server will allow the method to be called.
     <i class="minus outline square icon"></i>
     <div class="content">
       Queries that fetch multiple rows will return a native <code class="small">Array</code>.
-      There is no equivalent to <code class="small">Illuminate\Database\Eloquent\Collection</code>.
+      There is currently no equivalent to <code class="small">Illuminate\Database\Eloquent\Collection</code>,
+      but this may change when there's better browser support for subclassing built-ins.
     </div>
   </div>
 

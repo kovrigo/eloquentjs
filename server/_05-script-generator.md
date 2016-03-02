@@ -17,11 +17,10 @@ php artisan eloquentjs:generate
 <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
 and adds them to your eloquent.js build. Query scopes and date mutators are taken from the model
 class and added to the javascript config.
-<div class="ui basic tertiary segment">
-  <i class="configure icon"></i> <code>@todo</code> include relations in the generated javascript
-</div>
 
-* By default all models are included. Pass a CSV list to specify which models you want in your eloquent.js build:
+<br>
+
+* By default all models are included. Pass a comma-separated list to specify which models you want in your eloquent.js build:
 
 ```language-bash
 php artisan eloquentjs:generate --models=Post,Comment
