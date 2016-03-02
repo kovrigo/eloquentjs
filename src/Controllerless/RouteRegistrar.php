@@ -21,6 +21,7 @@ class RouteRegistrar
      * Create a new RouteRegistrar instance.
      *
      * @param Router $router
+     * @param string $controller
      */
     public function __construct(Router $router, $controller)
     {
@@ -92,6 +93,10 @@ class RouteRegistrar
      */
     public function getCurrentResource()
     {
-        return $this->router->current()->getAction()['resource'];
+        if ($currentRoute = $this->router->current()) {
+            return $currentRoute->getAction()['resource'];
+        }
+
+        return null;
     }
 }
