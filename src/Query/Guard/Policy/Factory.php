@@ -14,7 +14,7 @@ class Factory
     /**
      * Create a new Factory instance.
      *
-     * @param mixed|null $defaultPolicy
+     * @param \Closure $defaultPolicy
      */
     public function __construct($defaultPolicy = null)
     {
@@ -75,7 +75,7 @@ class Factory
      */
     protected function fromArray(array $rules)
     {
-        return $this->fromCallback(function ($guard) use ($rules) {
+        return $this->fromCallback(function($guard) use ($rules) {
             foreach ($rules as $method => $arguments) {
                 $guard->allow($method, $arguments);
             }
@@ -99,10 +99,10 @@ class Factory
     {
         return array_build(
             preg_split('#(?<=\))\s*(?=[a-z])#i', $input), // split on spaces between e.g. `where(*) orderBy(*)`
-            function ($index, $rule) {
+            function($index, $rule) {
 
-                if (!preg_match('#^(?<method>[a-z]+)\((?<args>[^)]*)\)$#i', $rule, $clause)) {
-                    throw new InvalidArgumentException('Could not parse rule [' . $rule . ']');
+                if ( ! preg_match('#^(?<method>[a-z]+)\((?<args>[^)]*)\)$#i', $rule, $clause)) {
+                    throw new InvalidArgumentException('Could not parse rule ['.$rule.']');
                 }
 
                 return [

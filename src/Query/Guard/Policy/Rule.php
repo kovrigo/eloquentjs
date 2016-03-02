@@ -117,7 +117,7 @@ class Rule
 
         $alternates = explode('|', $pattern);
 
-        return !! array_first($alternates, function ($index, $pattern) use ($value) {
+        return ! ! array_first($alternates, function($index, $pattern) use ($value) {
 
             $firstCharacter = substr($pattern, 0, 1);
             $remainder = substr($pattern, 1);

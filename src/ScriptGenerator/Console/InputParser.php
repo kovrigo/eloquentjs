@@ -14,7 +14,7 @@ class InputParser
     public function parse($classList, $namespace)
     {
         return array_map(
-            function ($className) use ($namespace) {
+            function($className) use ($namespace) {
                 return $this->getFullyQualifiedClassName($className, $namespace);
             },
             array_map('trim', explode(',', $classList))
