@@ -26,7 +26,7 @@ class EloquentJsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('eloquentjs.query', function ($app) {
+        $this->app->singleton('eloquentjs.query', function($app) {
             return $app[Interpreter::class]->parse($app['request']);
         });
 
@@ -87,13 +87,13 @@ class EloquentJsServiceProvider extends ServiceProvider
 
         $app->when(GenericController::class)
             ->needs(AcceptsEloquentJsQueries::class)
-            ->give(function ($app) {
+            ->give(function($app) {
                 if ($resource = $app['eloquentjs.router']->getCurrentResource()) {
                     return $app->make($resource);
                 }
             });
 
-        $router->macro('eloquent', function ($uri, $resource, $options = []) use ($app) {
+        $router->macro('eloquent', function($uri, $resource, $options = []) use ($app) {
             $app['eloquentjs.router']->addRoute($uri, $resource, $options);
         });
     }
@@ -105,9 +105,9 @@ class EloquentJsServiceProvider extends ServiceProvider
      */
     protected function setDefaultPolicy()
     {
-        $this->app->bind(Factory::class, function () {
+        $this->app->bind(Factory::class, function() {
             return new Factory(
-                function (Builder $guard) {
+                function(Builder $guard) {
                     $guard->allow('select');
                     $guard->allow('distinct');
                     $guard->allow('where');

@@ -29,7 +29,7 @@ class Policy
      */
     public function test(MethodCall $call)
     {
-        return !! array_first($this->rules, function ($index, $rule) use ($call) {
+        return ! ! array_first($this->rules, function($index, $rule) use ($call) {
             return $rule->test($call);
         });
     }

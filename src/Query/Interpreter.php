@@ -32,7 +32,7 @@ class Interpreter
      */
     protected function getMethodCalls(array $calls)
     {
-        return array_map(function ($call) {
+        return array_map(function($call) {
             return new MethodCall($call[0], $call[1]);
         }, $calls);
     }

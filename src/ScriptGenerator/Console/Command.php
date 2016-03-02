@@ -117,7 +117,7 @@ class Command extends BaseCommand
     {
         return array_filter(
             $this->classFinder->findClasses(app_path()),
-            function ($className) {
+            function($className) {
                 return is_subclass_of($className, AcceptsEloquentJsQueries::class);
             }
         );
@@ -133,7 +133,7 @@ class Command extends BaseCommand
     {
         $metadata = $this->inspector->inspect(new $className);
 
-        if (!$metadata->endpoint) {
+        if ( ! $metadata->endpoint) {
             $metadata->endpoint = $this->findMissingEndpoint($className);
         }
 
@@ -169,7 +169,7 @@ class Command extends BaseCommand
     {
         $this->table(
             ['Model', 'Endpoint'],
-            array_map(function ($metadata) {
+            array_map(function($metadata) {
                 return [$metadata->name, $metadata->endpoint];
             }, $models)
         );
@@ -178,7 +178,7 @@ class Command extends BaseCommand
     /**
      * Prompt user to confirm.
      *
-     * @return bool
+     * @return string
      */
     protected function isConfirmed()
     {

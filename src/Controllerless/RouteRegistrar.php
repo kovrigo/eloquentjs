@@ -54,8 +54,8 @@ class RouteRegistrar
                     $this->routeOptions($options)
                 );
 
-                $router->put($uri, $this->controller . '@updateAll');
-                $router->delete($uri, $this->controller . '@destroyAll');
+                $router->put($uri, $this->controller.'@updateAll');
+                $router->delete($uri, $this->controller.'@destroyAll');
             }
         );
     }
