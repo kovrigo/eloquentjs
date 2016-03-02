@@ -18,7 +18,7 @@ class GenericController extends Controller
      *
      * @param AcceptsEloquentJsQueries $model
      */
-    public function __construct(AcceptsEloquentJsQueries $model)
+    public function __construct(AcceptsEloquentJsQueries $model = null)
     {
         $this->model = $model;
     }
@@ -64,10 +64,6 @@ class GenericController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($id === '*') {
-            return $this->model->newQuery()->eloquentJs()->update($request->all());
-        }
-
         $resource = $this->model->findOrFail($id);
 
         $resource->update($request->all());
@@ -83,12 +79,33 @@ class GenericController extends Controller
      */
     public function destroy($id)
     {
-        if ($id === '*') {
-            return $this->model->newQuery()->eloquentJs()->delete();
-        }
-
         $resource = $this->model->findOrFail($id);
 
         return ['success' => $resource->delete()];
+    }
+
+    /**
+     * Update all resources in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAll(Request $request)
+    {
+        return [
+            'updated' => $this->model->newQuery()->eloquentJs()->update($request->all())
+        ];
+    }
+
+    /**
+     * Remove all resources from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll()
+    {
+        return [
+            'deleted' => $this->model->newQuery()->eloquentJs()->delete()
+        ];
     }
 }
