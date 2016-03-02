@@ -68,13 +68,13 @@
 It handles building queries with fluent syntax, making HTTP requests
 to the server, and interpreting the responses.</p>
 
-<p>The complete source for the client-side library can be found at
-<a href="https://github.com/parsnick/eloquentjs-client">github.com/parsnick/eloquentjs-client</a>.</p>
+<p>The complete source for the client-side library can be found at github as
+<a href="https://github.com/parsnick/eloquentjs-client">parsnick/eloquentjs-client</a>.</p>
   
   <h2 class="ui dividing header">Manual configuration</h2>
-  <p><em>EloquentJs</em> is unopinionated about the actual back-end implementation - all it
-needs is a RESTful endpoint for each model. For usage outside Laravel, you can configure
-your models manually.</p>
+  <p><em>EloquentJs</em> is unopinionated about the actual back-end implementation - by default,
+it assumes you'll use the server-side package to provide a RESTful endpoint for
+each model. For usage outside Laravel, you can configure your models manually.</p>
 
 <ul>
 <li>Load the core <code>eloquent.js</code> library</li>
@@ -103,6 +103,14 @@ Eloquent('Comments', {
     The package for Laravel includes the latest build of eloquent.js, and has
     an Artisan command that generates the configuration automatically by looking
     at the model classes in your application.
+</div>
+
+<div class="ui segment">
+  <i class="large question icon"></i>
+  Want to use <em>EloquentJs</em> without an HTTP API? Not a problem, just swap out the default
+  <a href="https://github.com/parsnick/eloquentjs-client/blob/master/src/Connection/RestfulJsonConnection.js"><code>RestfulJsonConnection</code></a>
+  for your own <a href="https://github.com/parsnick/eloquentjs-client/blob/master/src/Connection/Connection.js"><code>Connection</code></a>. 
+  You can then use a localStorage based database, or support offline usage of your app with something like CouchDB. 
 </div>
   
   <h2 class="ui dividing header">Usage</h2>
@@ -147,11 +155,10 @@ var_dump($post);
   </div>
 </div>
 
-<p><br><br />
-<br></p>
+<p><br></p>
 
 <p>The main Eloquent features are supported as described below. Note that the
-existence of a method in the client-side API does not necesssarily mean the
+existence of a method in the client-side API does not necessarily mean the
 server will allow the method to be called.</p>
 
 <p><br></p>
@@ -253,7 +260,8 @@ server will allow the method to be called.</p>
     <i class="minus outline square icon"></i>
     <div class="content">
       Queries that fetch multiple rows will return a native <code class="small">Array</code>.
-      There is no equivalent to <code class="small">Illuminate\Database\Eloquent\Collection</code>.
+      There is currently no equivalent to <code class="small">Illuminate\Database\Eloquent\Collection</code>,
+      but this may change when there's better browser support for subclassing built-ins.
     </div>
   </div>
 
@@ -544,6 +552,7 @@ export default Post;
 
 
   </main>
+
   </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -603,5 +612,10 @@ export default Post;
 
   </script>
 
-  </body>
+    <script>
+    $(function () {
+      $('.ui.main table:not(.table)').addClass('ui compact celled table');
+    });
+  </script>
+</body>
 </html>

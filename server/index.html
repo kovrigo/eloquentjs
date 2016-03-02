@@ -155,6 +155,63 @@ Route::eloquent('api/posts', App\Post::class, ['except' =&gt; ['destroy']]);
 <p>And that's all there is to it! Skip ahead to <a href="server/#create-your-eloquent-js-build">create your eloquent.js build</a> and start
 using Eloquent in the browser.</p>
 
+<h3>Actions handled by Route::eloquent()</h3>
+
+<p>There are a couple of differences from the set of routes handled by a native Laravel <code>Route::resource()</code>.</p>
+
+<ol>
+<li>Trivially, the <code>create</code> and <code>edit</code> actions - which would normally display a form to the user - do not exist in <em>EloquentJs</em>. </li>
+<li>Less obviously, two new actions <code>updateAll</code> and <code>destroyAll</code> are introduced. These enable write queries against
+multiple records at once, for example <code>Eloquent.Post.where(&lt;something&gt;).update({ visible: false })</code>.</li>
+</ol>
+
+<table>
+<thead>
+<tr>
+  <th>Verb</th>
+  <th>Path</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>GET</td>
+  <td><code>/posts</code></td>
+  <td>index</td>
+</tr>
+<tr>
+  <td>POST</td>
+  <td><code>/posts</code></td>
+  <td>store</td>
+</tr>
+<tr>
+  <td>GET</td>
+  <td><code>/posts/{post}</code></td>
+  <td>show</td>
+</tr>
+<tr>
+  <td>PUT/PATCH</td>
+  <td><code>/posts/{post}</code></td>
+  <td>update</td>
+</tr>
+<tr>
+  <td>DELETE</td>
+  <td><code>/posts/{post}</code></td>
+  <td>destroy</td>
+</tr>
+<tr>
+  <td>PUT/PATCH</td>
+  <td><code>/posts</code></td>
+  <td>updateAll</td>
+</tr>
+<tr>
+  <td>DELETE</td>
+  <td><code>/posts</code></td>
+  <td>destroyAll</td>
+</tr>
+</tbody>
+</table>
+
 <div class="ui basic inverted orange tertiary segment">
   <i class="red warning icon"></i>
   <code>Route::eloquent()</code> allows any query to be executed. If you need finer control over which
@@ -342,12 +399,10 @@ and adds them to your eloquent.js build. Query scopes and date mutators are take
 class and added to the javascript config.</li>
 </ul>
 
-<div class="ui basic tertiary segment">
-  <i class="configure icon"></i> <code>@todo</code> include relations in the generated javascript
-</div>
+<p><br></p>
 
 <ul>
-<li>By default all models are included. Pass a CSV list to specify which models you want in your eloquent.js build:</li>
+<li>By default all models are included. Pass a comma-separated list to specify which models you want in your eloquent.js build:</li>
 </ul>
 
 <pre><code class="language-bash">php artisan eloquentjs:generate --models=Post,Comment
@@ -503,6 +558,7 @@ implementation of <code>AcceptsEloquentJsQueries</code> without using the packag
   
 
   </main>
+
   </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -562,5 +618,10 @@ implementation of <code>AcceptsEloquentJsQueries</code> without using the packag
 
   </script>
 
-  </body>
+    <script>
+    $(function () {
+      $('.ui.main table:not(.table)').addClass('ui compact celled table');
+    });
+  </script>
+</body>
 </html>
