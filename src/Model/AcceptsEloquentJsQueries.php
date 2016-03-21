@@ -4,6 +4,10 @@ namespace EloquentJs\Model;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Interface AcceptsEloquentJsQueries
+ * @deprecated
+ */
 interface AcceptsEloquentJsQueries
 {
     /**

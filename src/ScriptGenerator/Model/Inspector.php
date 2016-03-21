@@ -2,7 +2,7 @@
 
 namespace EloquentJs\ScriptGenerator\Model;
 
-use EloquentJs\Model\AcceptsEloquentJsQueries;
+use Illuminate\Database\Eloquent\Model;
 
 class Inspector
 {
@@ -14,10 +14,10 @@ class Inspector
     /**
      * Inspect a model class and return its metadata.
      *
-     * @param AcceptsEloquentJsQueries $instance
+     * @param Model $instance
      * @return Metadata
      */
-    public function inspect(AcceptsEloquentJsQueries $instance)
+    public function inspect(Model $instance)
     {
         return new Metadata(
             class_basename($instance),
@@ -30,10 +30,10 @@ class Inspector
     /**
      * Find the endpoint for this model.
      *
-     * @param AcceptsEloquentJsQueries $instance
+     * @param Model $instance
      * @return string
      */
-    protected function findEndpoint(AcceptsEloquentJsQueries $instance)
+    protected function findEndpoint(Model $instance)
     {
         return $instance->getEndpoint();
     }
@@ -41,10 +41,10 @@ class Inspector
     /**
      * Get any additional date columns for this model.
      *
-     * @param AcceptsEloquentJsQueries $instance
+     * @param Model $instance
      * @return array
      */
-    protected function findDateColumns(AcceptsEloquentJsQueries $instance)
+    protected function findDateColumns(Model $instance)
     {
         return array_values(
             array_diff($instance->getDates(), ['created_at', 'updated_at', 'deleted_at'])
@@ -54,10 +54,10 @@ class Inspector
     /**
      * Get the scope methods for this model with 'scope' prefix removed.
      *
-     * @param AcceptsEloquentJsQueries $instance
+     * @param Model $instance
      * @return array
      */
-    protected function findScopeMethods(AcceptsEloquentJsQueries $instance)
+    protected function findScopeMethods(Model $instance)
     {
         return array_map(
             function($method) {

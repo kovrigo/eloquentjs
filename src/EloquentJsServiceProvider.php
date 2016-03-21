@@ -4,7 +4,6 @@ namespace EloquentJs;
 
 use EloquentJs\Controllerless\GenericController;
 use EloquentJs\Controllerless\RouteRegistrar;
-use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\Query\Events\EloquentJsWasCalled;
 use EloquentJs\Query\Guard\Policy\Builder;
 use EloquentJs\Query\Guard\Policy\Factory;
@@ -14,6 +13,7 @@ use EloquentJs\Query\Listeners\CheckQueryIsAuthorized;
 use EloquentJs\Query\Query;
 use EloquentJs\ScriptGenerator\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -86,7 +86,7 @@ class EloquentJsServiceProvider extends ServiceProvider
             ->give(GenericController::class);
 
         $app->when(GenericController::class)
-            ->needs(AcceptsEloquentJsQueries::class)
+            ->needs(Model::class)
             ->give(function($app) {
                 if ($resource = $app['eloquentjs.router']->getCurrentResource()) {
                     return $app->make($resource);

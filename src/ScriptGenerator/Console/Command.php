@@ -2,7 +2,6 @@
 
 namespace EloquentJs\ScriptGenerator\Console;
 
-use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\ScriptGenerator\Generator;
 use EloquentJs\ScriptGenerator\Model\Inspector;
 use EloquentJs\ScriptGenerator\Model\Metadata;
@@ -118,9 +117,20 @@ class Command extends BaseCommand
         return array_filter(
             $this->classFinder->findClasses(app_path()),
             function($className) {
-                return is_subclass_of($className, AcceptsEloquentJsQueries::class);
+                return $this->isEloquentJsModel($className);
             }
         );
+    }
+
+    /**
+     * Test if the named model supports EloquentJs.
+     *
+     * @param string $className
+     * @return bool
+     */
+    protected function isEloquentJsModel($className)
+    {
+        return method_exists($className, 'scopeEloquentJs');
     }
 
     /**

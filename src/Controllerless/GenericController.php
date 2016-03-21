@@ -2,23 +2,23 @@
 
 namespace EloquentJs\Controllerless;
 
-use EloquentJs\Model\AcceptsEloquentJsQueries;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class GenericController extends Controller
 {
     /**
-     * @var AcceptsEloquentJsQueries
+     * @var Model
      */
     protected $model;
 
     /**
      * Create a new GenericController instance.
      *
-     * @param AcceptsEloquentJsQueries $model
+     * @param Model $model
      */
-    public function __construct(AcceptsEloquentJsQueries $model = null)
+    public function __construct(Model $model = null)
     {
         $this->model = $model;
     }
