@@ -6,11 +6,17 @@ use EloquentJs\ScriptGenerator\Model\Metadata;
 use Acme\Comment;
 use Acme\Post;
 use Acme\Secret;
+use Illuminate\Config\Repository;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class InspectorSpec extends ObjectBehavior
 {
+    function let()
+    {
+        $this->beConstructedWith(new Repository());
+    }
+
     function it_is_initializable()
     {
         $this->shouldHaveType('EloquentJs\ScriptGenerator\Model\Inspector');

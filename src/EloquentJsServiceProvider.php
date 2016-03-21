@@ -55,6 +55,10 @@ class EloquentJsServiceProvider extends ServiceProvider
         $this->enableGenericResourceRouting($router);
 
         $this->setDefaultPolicy();
+
+        $this->publishes([
+            __DIR__.'/config.php' => config_path('eloquentjs.php'),
+        ]);
     }
 
     /**

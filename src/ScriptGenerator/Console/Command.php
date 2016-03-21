@@ -104,6 +104,10 @@ class Command extends BaseCommand
             return $this->inputParser->parse($this->option('models'), $this->option('namespace'));
         }
 
+        if (config('eloquentjs.generator')) {
+            return array_keys(config('eloquentjs.generator'));
+        }
+
         return $this->searchAppForModels();
     }
 

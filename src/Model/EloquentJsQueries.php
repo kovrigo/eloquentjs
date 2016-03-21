@@ -89,7 +89,7 @@ trait EloquentJsQueries
         if (property_exists($this, 'endpoint')) {
             return $this->endpoint;
         }
-
+        
         return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace EloquentJs\ScriptGenerator\Model;
 
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 
 class Inspector
@@ -10,6 +11,21 @@ class Inspector
      * @var array
      */
     protected $excludeScopes = ['scopeScope', 'scopeEloquentJs'];
+
+    /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
+     * Create a new Inspector instance.
+     *
+     * @param Repository $config
+     */
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * Inspect a model class and return its metadata.
@@ -31,11 +47,15 @@ class Inspector
      * Find the endpoint for this model.
      *
      * @param Model $instance
-     * @return string
+     * @return string|null
      */
     protected function findEndpoint(Model $instance)
     {
-        return $instance->getEndpoint();
+        if ($instance->getEndpoint()) {
+            return $instance->getEndpoint();
+        }
+
+        return $this->readModelConfig($instance, 'endpoint');
     }
 
     /**
@@ -72,5 +92,19 @@ class Inspector
                 )
             )
         );
+    }
+
+    /**
+     * Read from a model config value from the eloquentjs.php config file.
+     *
+     * @param Model $instance
+     * @param string $key
+     * @return mixed
+     */
+    protected function readModelConfig(Model $instance, $key)
+    {
+        $className = get_class($instance);
+
+        return $this->config->get("eloquentjs.generator.{$className}.{$key}");
     }
 }
