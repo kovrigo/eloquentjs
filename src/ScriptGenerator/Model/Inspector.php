@@ -39,7 +39,8 @@ class Inspector
             class_basename($instance),
             $this->findEndpoint($instance),
             $this->findDateColumns($instance),
-            $this->findScopeMethods($instance)
+            $this->findScopeMethods($instance),
+            $this->findRelations($instance)
         );
     }
 
@@ -95,16 +96,34 @@ class Inspector
     }
 
     /**
+     * Get a map of relation method names and their related models.
+     *
+     * For example, if the given model has a "comments" method that
+     * describes the relation to a Comment model, this returns
+     * ['comments' => 'Comment']
+     *
+     * @param  Model  $instance
+     * @return array
+     */
+    protected function findRelations(Model $instance)
+    {
+        $relations = $this->readModelConfig($instance, 'relations', []);
+
+        return array_map(function ($relation) { return class_basename($relation); }, $relations);
+    }
+
+    /**
      * Read from a model config value from the eloquentjs.php config file.
      *
      * @param Model $instance
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
-    protected function readModelConfig(Model $instance, $key)
+    protected function readModelConfig(Model $instance, $key, $default = null)
     {
         $className = get_class($instance);
 
-        return $this->config->get("eloquentjs.generator.{$className}.{$key}");
+        return $this->config->get("eloquentjs.generator.{$className}.{$key}", $default);
     }
 }

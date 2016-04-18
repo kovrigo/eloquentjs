@@ -51,7 +51,7 @@ class Generator
      */
     protected function suffix()
     {
-        return '})(Eloquent=Eloquent.default)';
+        return '})(Eloquent)';
     }
 
     /**
@@ -63,9 +63,10 @@ class Generator
     protected function model(Metadata $model)
     {
         $config = json_encode(array_filter([
-            'endpoint' => $model->endpoint,
-            'dates'    => $model->dates,
-            'scopes'   => $model->scopes,
+            'endpoint'  => $model->endpoint,
+            'dates'     => $model->dates,
+            'scopes'    => $model->scopes,
+            'relations' => $model->relations,
         ]), JSON_UNESCAPED_SLASHES);
 
         return "E('{$model->name}', {$config})";
