@@ -31,33 +31,31 @@ and add the service provider
 
 #### Usage
 
-1. **Implement `EloquentJs\Model\AcceptsEloquentJsQueries`**
+1. **Use the trait `EloquentJs\Model\EloquentJsQueries` in your models**
     
-    The `EloquentJs\Model\EloquentJsQueries` trait can add the required methods.
-
     ```php
-    use EloquentJs\Model\AcceptsEloquentJsQueries;
     use EloquentJs\Model\EloquentJsQueries;
     
-    class Post implements AcceptsEloquentJsQueries {
+    class Post extends Model {
         use EloquentJsQueries;
         // ...
     }
     ```
 
-2. **Add routes for queries coming in via the client-side library**
+2. **Add routes to respond to queries coming in via the client-side library**
     
-    Use `Route::eloquent($url, $modelClass)` to register a set of RESTful routes similar to
-    `Route::resource($url, $controllerClass)`.
+    (**a**) Use `Route::eloquent($url, $modelClass)` to register a set of RESTful routes similar to
+    `Route::resource($url, $controllerClass)` provided by native Laravel.
 
     ```php
     // app/Http/routes.php
     Route::eloquent('api/posts', App\Post::class);
     ```
     
-    Or, for greater control, use your own controller to limit or force certain clauses:
+    *or* (**b**) for complete control over which methods are permitted, use your own controller logic:
 
     ```php
+    // app/Http/routes.php
     Route::get('api/posts', function () {
         return App\Post::eloquentJs('where(id|body) orderBy(body|rating|created_at)')
             ->take(50)
@@ -89,7 +87,7 @@ and add the service provider
     Post.create({ title: 'My second post!' }).then(function (post) {
         
         console.log(post.exists); // true
-        console.log(post.title); // My first post!
+        console.log(post.title); // My second post!
         console.log(post.blahblahblah); // undefined
         console.log(post.created_at.getFullYear()); // 2016
         console.log(post.getKey()); // 2    
@@ -116,8 +114,17 @@ and add the service provider
     });
     ```
 
+#### Changelog
+##### __1.2__
+* Support `relations` property set in `eloquentjs.php` config file.
+
+##### __1.1__
+* Added an optional `eloquentjs.php` config file to replace interactive prompts for unknown info during `php artisan eloquentjs:generate`.
+* Extracted 'update all' and 'delete all' to their own routes: now handles PUT and DELETE to `/resource` respectively.
+
 #### Contributing
-All contributions welcome. For anything related to the companion javascript library, please use [parsnick/eloquentjs-client](https://github.com/parsnick/eloquentjs-client).
+As a new project, no formal contribution guide exists but feel free to open issues and pull requests. 
+For anything related to the companion javascript library, please use [`parsnick/eloquentjs-client`](https://github.com/parsnick/eloquentjs-client).
 
 #### License
 MIT
