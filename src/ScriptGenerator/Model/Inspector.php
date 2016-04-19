@@ -109,7 +109,7 @@ class Inspector
     {
         $relations = $this->readModelConfig($instance, 'relations', []);
 
-        return array_map(function ($relation) { return class_basename($relation); }, $relations);
+        return array_map(function($relation) { return class_basename($relation); }, $relations);
     }
 
     /**
