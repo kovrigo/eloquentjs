@@ -37,8 +37,8 @@
     <a href="server/">PHP package for Laravel (server)</a>
       </div>
   
-  <div href="examples" class="item ">
-    <a href="examples/">Examples</a>
+  <div href="recipes" class="item ">
+    <a href="recipes/">Recipes</a>
       </div>
 
   <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
@@ -78,7 +78,7 @@ configuration and gives you access to your data from javascript via the same Elo
 <li>The package is available on <a href="https://packagist.org/packages/parsnick/eloquentjs">Packagist</a>. Install with composer.</li>
 </ul>
 
-<pre><code class="language-bash">composer require parsnick/eloquentjs:dev-master
+<pre><code class="language-bash">composer require parsnick/eloquentjs
 </code></pre>
 
 <ul>
@@ -96,15 +96,13 @@ configuration and gives you access to your data from javascript via the same Elo
   <h4>Edit your model classes to accept queries from EloquentJs</h4>
 
 <ul>
-<li>Implement the <code>AcceptsEloquentJsQueries</code> interface.</li>
 <li>You can use the <code>EloquentJsQueries</code> trait to provide the implementation.</li>
 </ul>
 
-<pre><code class="language-php">use EloquentJs\Model\AcceptsEloquentJsQueries;
-use EloquentJs\Model\EloquentJsQueries;
+<pre><code class="language-php">use EloquentJs\Model\EloquentJsQueries;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model implements AcceptsEloquentJsQueries {
+class Post extends Model {
     use EloquentJsQueries;
 }
 </code></pre>
@@ -133,7 +131,7 @@ for your models.</li>
   <h2 class="ui dividing header">Usage</h2>
   <ul>
   <li>Simply include the javascript file generated above to start using Eloquent in the browser.</li>
-  <li>You can access models as properties of the `Eloquent` global.</li>
+  <li>You can access models as properties of the <code>Eloquent</code> global.</li>
 </ul>
 
 <pre><code class="language-js">var Post = Eloquent.Post;

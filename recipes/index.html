@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> EloquentJs </title>
+
+  <base href="/eloquentjs/">
+
+  <link rel="stylesheet" href="vendor/all.css">
+  <link rel="stylesheet" href="site.css">
+
+</head>
+<body class="docs pushable">
+
+  <div class="ui sidebar inverted left vertical restorable menu">
+
+  <div class="ui inverted icon menu">
+    <div class="right aligned item">
+      <i class="large close icon"></i>
+    </div>
+  </div>
+
+  <a href="." class="header item">EloquentJs</a>
+
+  <div class="item ">
+    <a href="getting-started/">Getting Started</a>
+      </div>
+
+  <div href="client" class="item ">
+    <a href="client/">Javascript library (client)</a>
+      </div>
+
+  <div href="server" class="item ">
+    <a href="server/">PHP package for Laravel (server)</a>
+      </div>
+  
+  <div href="recipes" class="item active">
+    <a href="recipes/">Recipes</a>
+      <div class="menu">
+    <div class="item">
+      <a href="recipes/data-binding.html">Usage with data-binding libraries</a>
+    </div>
+    <div class="item">
+      <a href="recipes/npm-integration.html">Integrating with the npm package</a>
+    </div>
+    <div class="item">
+      <a href="recipes/custom-connection.html">Customising the connection</a>
+    </div>    
+  </div>
+  </div>
+
+  <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
+    <i class="github icon"></i>
+    View on GitHub
+  </a>
+
+</div>
+
+  <div class="pusher">
+    
+  <a class="toc toggler ui black icon button" title="Menu">
+    <i class="sidebar icon"></i>
+  </a>
+
+  <main class="ui main text container">
+
+    <div class="ui breadcrumb">
+      <a class="section" href=".">EloquentJs</a>
+      <i class="right angle icon divider"></i>
+      <div class="active section">Recipes</div>
+    </div>
+
+      
+  <h2 class="ui header">
+    Recipes
+  </h2>
+  <p>The pages in this section show how you might use <em>EloquentJs</em> in a real-world project.</p>
+
+  <h3 class="ui dividing header">
+    <a href="recipes/data-binding.html">
+      Usage with data-binding libraries
+    </a>    
+  </h3>
+
+  <p>
+    Combine <em>EloquentJs</em> with something like <em>Angular</em>, <em>Knockout</em> or <em>Vue</em>
+    to create a powerful UI for your app in minutes.
+  </p>
+
+  <h3 class="ui dividing header">
+    <a href="recipes/npm-integration.html">
+      Integrating with the npm package
+    </a>    
+  </h3>
+
+  <p>
+    If you have an existing build process for your javascript, you might prefer
+    to <code>require()</code> or <code>import</code> <em>EloquentJs</em> as an npm module.
+    Not a problem!
+  </p>
+
+  <h3 class="ui dividing header">
+    <a href="recipes/custom-connection.html">
+      Customising the connection
+    </a>    
+  </h3>
+
+  <p>
+    The package assumes you want models to be persisted via an HTTP REST connection.
+    If that's not the case, swap out the <code>Connection</code> class for one that suits.
+  </p>
+
+  <h3 class="ui dividing header">More to come&hellip;</h3>
+  
+  <p>
+    Submit an issue (or even better, a pull request) if there's anything else you'd like to see here.
+  </p>
+  
+
+  </main>
+
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="vendor/all.js"></script>
+  <script>
+
+    $(document).ready(function() {
+
+      $('.help.popup').popup();
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.toggler')
+        .sidebar('attach events', '.ui.sidebar .close.icon')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('setting', 'dimPage', false)
+        .sidebar('setting', 'closable', false)
+        .sidebar('setting', 'onChange', rememberState)
+      ;
+
+      // Restore sidebar state
+      if (cookie.get('sidebar_open')) $('.ui.restorable.sidebar').sidebar('show');
+
+      // Highlight current section in sidebar
+      $('main.ui.text.container h2')
+        .visibility({
+          onTopPassed: function () {
+            setActiveItem(this.id);
+          },
+          onTopPassedReverse: function () {
+            var previous = $(this).prevAll('h2').first().attr('id');
+            if (previous) setActiveItem(previous);
+          },
+          once: false
+        });
+    });
+
+    function rememberState()
+    {
+      if ($(this).sidebar('is hidden'))
+        cookie.set('sidebar_open', true, { path: '/eloquentjs/' });
+      else
+        cookie.set('sidebar_open', '', { path: '/eloquentjs/' });
+    }
+
+    function setActiveItem(name)
+    {
+      $('.ui.sidebar.menu a').each(function () {
+        var $this = $(this);
+        if (name && $this.attr('href').indexOf('#'+name) >= 0) {
+          $this.addClass('active');
+        } else {
+          $this.removeClass('active');
+        }
+      });
+    }
+
+  </script>
+
+    <script>
+    $(function () {
+      $('.ui.main table:not(.table)').addClass('ui compact celled table');
+    });
+  </script>
+</body>
+</html>

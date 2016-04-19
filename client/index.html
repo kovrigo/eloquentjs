@@ -37,8 +37,8 @@
     <a href="server/">PHP package for Laravel (server)</a>
       </div>
   
-  <div href="examples" class="item ">
-    <a href="examples/">Examples</a>
+  <div href="recipes" class="item ">
+    <a href="recipes/">Recipes</a>
       </div>
 
   <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
@@ -68,7 +68,7 @@
 It handles building queries with fluent syntax, making HTTP requests
 to the server, and interpreting the responses.</p>
 
-<p>The complete source for the client-side library can be found at github as
+<p>The complete source for the client-side library can be found on github as
 <a href="https://github.com/parsnick/eloquentjs-client">parsnick/eloquentjs-client</a>.</p>
   
   <h2 class="ui dividing header">Manual configuration</h2>
@@ -103,14 +103,6 @@ Eloquent('Comments', {
     The package for Laravel includes the latest build of eloquent.js, and has
     an Artisan command that generates the configuration automatically by looking
     at the model classes in your application.
-</div>
-
-<div class="ui segment">
-  <i class="large question icon"></i>
-  Want to use <em>EloquentJs</em> without an HTTP API? Not a problem, just swap out the default
-  <a href="https://github.com/parsnick/eloquentjs-client/blob/master/src/Connection/RestfulJsonConnection.js"><code>RestfulJsonConnection</code></a>
-  for your own <a href="https://github.com/parsnick/eloquentjs-client/blob/master/src/Connection/Connection.js"><code>Connection</code></a>. 
-  You can then use a localStorage based database, or support offline usage of your app with something like CouchDB. 
 </div>
   
   <h2 class="ui dividing header">Usage</h2>
@@ -485,7 +477,7 @@ Post.create({ body: 'Hello' }); // will not be created</code></pre>
   
   <h2 class="ui dividing header">Using the node package</h2>
   <p>For advanced usage, you can use <em>EloquentJs</em> as a node module and customise the build
-process. The default build uses <a href="http://browserify.org/">browserify</a> - check the build script in
+process. The default build uses <a href="http://rollupjs.org/">rollup</a> - check the build script in
 <a href="https://github.com/parsnick/eloquentjs-client/blob/master/package.json">package.json</a>
 for the exact command.</p>
 
@@ -494,13 +486,13 @@ you just want to exclude some of the default components from your build.</p>
 
 <p>Whatever the reason, you can install with npm:</p>
 
-<pre><code class="language-bash">npm install laravel-eloquentjs
+<pre><code class="language-bash">npm install eloquentjs
 </code></pre>
 
 <p>And then you can import and extend whichever components you want:</p>
 
 <pre><code class="language-js">// javascript/Post.js
-import { Model } from 'laravel-eloquentjs';
+import {Model} from 'eloquentjs';
 import Comment from './Comment';
 
 class Post extends Model {

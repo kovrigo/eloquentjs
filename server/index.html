@@ -37,8 +37,8 @@
     <a href="server/">PHP package for Laravel (server)</a>
       </div>
   
-  <div href="examples" class="item ">
-    <a href="examples/">Examples</a>
+  <div href="recipes" class="item ">
+    <a href="recipes/">Recipes</a>
       </div>
 
   <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
@@ -75,8 +75,7 @@ the service provider, as per the <a href="getting-started/#installation">Getting
   <p>Any Eloquent <code><abbr title="Illuminate\Database\Eloquent\Model">Model</abbr></code> can be used with <em>EloquentJs</em>.</p>
 
 <ul>
-<li>Simply implement <code><abbr title="EloquentJs\Model\EloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
-<a href="https://github.com/parsnick/eloquentjs/blob/master/src/Model/AcceptsEloquentJsQueries.php"><i class="tiny external icon" title="View on GitHub"></i></a></li>
+<li>Simply implement <code>scopeEloquentJs()</code> in the model</li>
 <li>You can use the <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code> trait to provide the implementation.</li>
 </ul>
 
@@ -86,11 +85,10 @@ the service provider, as per the <a href="getting-started/#installation">Getting
 
 namespace App;
 
-use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\Model\EloquentJsQueries;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model implements AcceptsEloquentJsQueries
+class Post extends Model
 {
     use EloquentJsQueries;
 
@@ -160,7 +158,7 @@ using Eloquent in the browser.</p>
 <p>There are a couple of differences from the set of routes handled by a native Laravel <code>Route::resource()</code>.</p>
 
 <ol>
-<li>Trivially, the <code>create</code> and <code>edit</code> actions - which would normally display a form to the user - do not exist in <em>EloquentJs</em>. </li>
+<li>Trivially, the <code>create</code> and <code>edit</code> actions - which would normally display a form to the user - do not exist. </li>
 <li>Less obviously, two new actions <code>updateAll</code> and <code>destroyAll</code> are introduced. These enable write queries against
 multiple records at once, for example <code>Eloquent.Post.where(&lt;something&gt;).update({ visible: false })</code>.</li>
 </ol>
@@ -220,8 +218,7 @@ multiple records at once, for example <code>Eloquent.Post.where(&lt;something&gt
   
   <h2 class="ui dividing header">Usage with your own controller</h2>
   <p>For a real-world project, you'll likely want to use your own controller logic instead.
-Now that you've set up your models to implement
-<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>,
+Now that you've set up your models with a <code>scopeEloquentJs()</code> method,
 it's trivial to apply an incoming <em>EloquentJs</em> query:</p>
 
 <pre><code class="language-php">$posts = Post::eloquentJs()-&gt;get();
@@ -393,16 +390,10 @@ pre-configured for the models in your Laravel application:</li>
 </code></pre>
 
 <ul>
-<li>This scans your app directory for any classes implementing
-<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+<li><p>This scans your app directory for any classes with the <code>scopeEloquentJs</code> method
 and adds them to your eloquent.js build. Query scopes and date mutators are taken from the model
-class and added to the javascript config.</li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>By default all models are included. Pass a comma-separated list to specify which models you want in your eloquent.js build:</li>
+class and added to the javascript config.</p></li>
+<li><p>By default all models are included. Pass a comma-separated list to specify which models you want in your eloquent.js build:</p></li>
 </ul>
 
 <pre><code class="language-bash">php artisan eloquentjs:generate --models=Post,Comment
@@ -415,10 +406,9 @@ class and added to the javascript config.</li>
 <h3>Endpoints</h3>
 
 <p>The most important configuration value for an <em>EloquentJs</em> model is the endpoint - that is, where should
-the javascript library send its HTTP requests. Or to put it another way, the URL that the resource
-controller for this model responds to.</p>
+the javascript library send its HTTP requests.</p>
 
-<p>The javascript generator will try to work out the endpoint automatically, in order of precedence:</p>
+<p>The <code>eloquentjs:generate</code> command will try to work out the endpoint automatically, in order of precedence:</p>
 
 <ol>
 <li>If the Model returns a value from <code>getEndpoint()</code>, this is used as the endpoint.</li>
@@ -426,13 +416,8 @@ controller for this model responds to.</p>
 
 <div class="ui basic secondary segment">
       <p>
-        The interface <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
-        requires a <code>getEndpoint()</code> method.
-      </p>
-      <p>
         The provided <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
-        trait defers to an <code>$endpoint</code> property on the model. You can optionally set this property,
-        or provide your own <code>getEndpoint()</code> implementation, or leave it undefined.
+        trait includes a <code>getEndpoint()</code> method which defers to an <code>$endpoint</code> property on the model. You may optionally set this property, or provide your own <code>getEndpoint()</code> implementation, or leave it undefined.
       </p>
     </div>
 
@@ -526,7 +511,6 @@ If not, you can safely disregard this namespace.</li>
 <li><code>Model</code> contains the central component of the package:
 
 <ul>
-<li>The <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code> interface.</li>
 <li>The <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
 trait provides the default implementation - it simply fires an <code>EloquentJsWasCalled</code> event.</li>
 </ul></li>
@@ -537,7 +521,7 @@ trait provides the default implementation - it simply fires an <code>EloquentJsW
 <li><code>Guard</code> contains the logic for authorising a <code>Query</code></li>
 <li><code>Listeners</code> respond to the <code>EloquentJsWasCalled</code> event</li>
 <li><code>Interpreter</code> reads the current <code>Illuminate\Http\Request</code> and returns a <code>Query</code></li>
-<li><code>Query</code> is a plain object representing an <em>EloquentJs</em> query (i.e. one originating in javascript)</li>
+<li><code>Query</code> is a plain object representing an <em>EloquentJs</em> query coming from the browser</li>
 </ul></li>
 <li><code>ScriptGenerator</code> is exclusively concerned with the Artisan command that builds your eloquent.js.</li>
 </ul>
@@ -553,7 +537,7 @@ system. You can of course add your own listeners, and control the order the list
 the <a href="https://laravel.com/api/5.2/Illuminate/Contracts/Events/Dispatcher.html#method_listen">$priority</a>
 argument.</li>
 <li>You can even bypass the default event-based handling altogether, and provide your own
-implementation of <code>AcceptsEloquentJsQueries</code> without using the package's trait.</li>
+implementation of <code>scopeEloquentJs()</code> without using the package's trait.</li>
 </ul>
   
 
