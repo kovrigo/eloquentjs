@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todos">
+<head>
+  <title>To-do list</title>
+</head>
+<body ng-controller="TaskController">
+
+  <fieldset>
+    <label>
+      <input type="checkbox" ng-model="filters.complete"> Show only completed
+    </label>
+    <br>
+    Order by
+    <label>
+      <input type="radio" name="order" value="created_at" ng-model="filters.order" checked> date
+    </label>
+    <label>
+      <input type="radio" name="order" value="title" ng-model="filters.order"> title
+    </label>
+  </fieldset>
+
+  <ul>
+    <li ng-repeat="task in tasks">
+      <span ng-if="task.is_completed">(done)</span>
+      {{ task.title }}
+    </li>
+  </ul>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.4/angular.js"></script>
+  <script src="eloquent.js"></script>
+  <script>
+  angular
+    .module('todos', [])
+    .controller('TaskController', function($scope) {
+
+      // Define the avilable filters for our task list
+      $scope.filters = {
+        complete: false,
+        order: 'id'
+      };
+
+      // Fetch task list using current filters
+      $scope.reload = function () {
+        var query = Eloquent.Task.query();
+
+        if ($scope.filters.complete) {
+          query.where('is_completed', true);
+        }
+
+        if ($scope.filters.order) {
+          query.orderBy($scope.filters.order);
+        }
+
+        query.get().then(tasks => {
+          $scope.tasks = tasks;
+          $scope.$apply();
+        });
+      };
+
+      // Reload if a filter changes
+      $scope.$watch('filters', $scope.reload, true);
+
+      // And show the initial list
+      $scope.reload();
+    })
+
+  </script>
+</body>
+</html>

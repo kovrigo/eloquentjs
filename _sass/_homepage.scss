@@ -55,6 +55,19 @@
   }
 }
 
+.features.segment {
+  .ui.list {
+    font-size: 1.33em;
+  }
+  .read-more.content {
+    a {
+      display: block;
+    }
+    text-align: right;
+    float: right;
+  }
+}
+
 .ui.footer.segment {
   padding: 3em 0em;
 }

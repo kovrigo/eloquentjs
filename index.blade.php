@@ -13,7 +13,7 @@
       <a class="item" href="getting-started">Getting Started</a>
       <a class="item" href="client">Client</a>
       <a class="item" href="server">Server</a>
-      <a class="item" href="examples">Examples</a>
+      <a class="item" href="recipes">Recipes</a>
       <div class="right item">
         <a class="ui right inverted button" href="https://github.com/parsnick/eloquentjs">
           <i class="github icon"></i>
@@ -74,7 +74,7 @@
         <h3>Define an Eloquent model</h3>
           
 @highlight('php')
-class Post extends \Illuminate\Database\Eloquent\Model
+class Post extends Model
 {
   public function comments()
   {
@@ -96,7 +96,7 @@ $ php artisan eloquentjs:generate
 +----------+-----------+
 | App\Post | api/posts |
 
-Javascript written to public/eloquent.js
+written to: public/eloquent.js
 @endhighlight
           
       </div>
@@ -107,11 +107,11 @@ Javascript written to public/eloquent.js
           
 @highlight('js')
 Eloquent.Post.find(1).then(post => {
-  console.log('fetched post #' + post.id);
 
-  post.update({ title: 'My new title' });
-
+  console.log('fetched #' + post.id);
+  post.update({title: 'My new title'});
   post.load('comments').then(/* ... */);
+
 });
 @endhighlight
           
@@ -122,6 +122,67 @@ Eloquent.Post.find(1).then(post => {
 
 </div>
 
+<div class="ui inverted vertical stripe features segment">
+  <div class="ui container">
+    <h3 class="ui inverted header">Why use EloquentJs?</h3>
+    <div class="ui list">
+      
+      <div class="item">
+        <i class="line chart icon"></i>
+        <div class="content">
+          <strong>minimal learning curve</strong> - as far as practical, uses the same API as Laravel's Eloquent          
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="browser icon"></i>
+        <div class="content">
+          runs in any ES5 and Fetch capable browser<sup>*</sup>          
+        </div>
+      </div>
+      
+      <div class="item">
+        <i class="leaf icon"></i>
+        <div class="content">
+          client library is just 17<small>KB</small> (<b>3.8<small>KB</small></b> gzipped) and no dependencies
+        </div>
+      </div>
+      
+      <div class="item">
+        <i class="rocket icon"></i>
+        <div class="content">
+          written in <strong>ES2015</strong> (babelified for production)
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="checkmark icon"></i>
+        <div class="content">
+          with tests and docs
+          <a href="https://coveralls.io/github/parsnick/eloquentjs-client?branch=master"><img src="https://coveralls.io/repos/parsnick/eloquentjs-client/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a> 
+          <a href="https://doc.esdoc.org/github.com/parsnick/eloquentjs-client/"><img src="https://doc.esdoc.org/github.com/parsnick/eloquentjs-client/badge.svg" alt="API docs"></a>
+        </div>
+      </div>
+
+      <div class="small item">
+        <small>* <a href="https://github.com/github/fetch">fetch polyfill</a> can be used </small>
+      </div>
+{{-- 
+      <div class="item">
+        <div class="read-more content">
+          <a href="why">
+            <i class="right arrow icon"></i> read more on the motivation behind EloquentJs
+            <br>
+            and when you might - or might not - want to use it.                        
+          </a>
+        </div>
+      </div>
+--}}
+    </div>
+
+  </div>
+</div>
+
 <div class="ui vertical stripe segment">
   <div class="ui text container">
     <div class="ui basic segment">
@@ -129,15 +190,15 @@ Eloquent.Post.find(1).then(post => {
         <a href="https://packagist.org/packages/parsnick/eloquentjs" class="ui button">Packagist</a>
         <a href="https://github.com/parsnick/eloquentjs" class="ui button">Github</a>
       </div>
-      <h3 class="ui header">eloquentjs <span class="subtitle">the PHP package</span></h3>
+      <h3 class="ui header">parsnick/eloquentjs <span class="subtitle">the PHP package</span></h3>
       <p>
         This is the server-side package which interprets incoming queries,
         checks for authorisation, and generates the relevant response.
-        It comes bundled with the latest <code>laravel-eloquentjs</code> build
+        It comes bundled with the latest <code>eloquentjs</code> build
         so it's all you usually need.
       </p>
       <p>
-      <a href="server" class="ui large button">Read documentation</a>
+      <a href="server" class="ui large button">documentation</a>
       </p>
     </div>
 
@@ -145,16 +206,16 @@ Eloquent.Post.find(1).then(post => {
 
     <div class="ui basic segment">
       <div class="ui right floated tiny basic buttons">
-        <a href="https://www.npmjs.com/package/laravel-eloquentjs" class="ui button">npm</a>
+        <a href="https://www.npmjs.com/package/eloquentjs" class="ui button">npm</a>
         <a href="https://github.com/parsnick/eloquentjs-client" class="ui button">Github</a>
       </div>
-      <h3 class="ui header">laravel-eloquentjs <span class="subtitle">the node package</span></h3>
+      <h3 class="ui header">eloquentjs <span class="subtitle">the node package</span></h3>
       <p>
         For advanced usage, the complete source of the client-side half of EloquentJs
         is available here. It provides the Eloquent API in javascript and can be
-        imported / required in a browserified / webpacked build.
+        imported into your own build process using browserify, webpack, or similar.
       </p>
-      <a href="client" class="ui large button">Read documentation</a>
+      <a href="client" class="ui large button">documentation</a>
     </div>
 
   </div>
@@ -169,7 +230,7 @@ Eloquent.Post.find(1).then(post => {
     <div class="right aligned column">
       based on the <a href="https://laravel.com/docs/5.1/eloquent">Eloquent ORM</a> by Taylor Otwell, not affiliated with Laravel
       <br>
-      website built by <a href="http://parsnick.github.io/steak/">steak</a>
+      website built with <a href="http://parsnick.github.io/steak/">steak</a>
     </div>
   </div>
 </div>

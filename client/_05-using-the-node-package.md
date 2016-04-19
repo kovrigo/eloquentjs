@@ -1,6 +1,6 @@
 
 For advanced usage, you can use *EloquentJs* as a node module and customise the build
-process. The default build uses [browserify](http://browserify.org/) - check the build script in
+process. The default build uses [rollup](http://rollupjs.org/) - check the build script in
 [package.json](https://github.com/parsnick/eloquentjs-client/blob/master/package.json)
 for the exact command.
 
@@ -10,14 +10,14 @@ you just want to exclude some of the default components from your build.
 Whatever the reason, you can install with npm:
 
 ```language-bash
-npm install laravel-eloquentjs
+npm install eloquentjs
 ```
 
 And then you can import and extend whichever components you want:
 
 ```language-js
 // javascript/Post.js
-import { Model } from 'laravel-eloquentjs';
+import {Model} from 'eloquentjs';
 import Comment from './Comment';
 
 class Post extends Model {

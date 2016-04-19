@@ -26,7 +26,7 @@ using Eloquent in the browser.
 
 There are a couple of differences from the set of routes handled by a native Laravel `Route::resource()`.
 
-1. Trivially, the `create` and `edit` actions - which would normally display a form to the user - do not exist in *EloquentJs*. 
+1. Trivially, the `create` and `edit` actions - which would normally display a form to the user - do not exist. 
 2. Less obviously, two new actions `updateAll` and `destroyAll` are introduced. These enable write queries against
 multiple records at once, for example `Eloquent.Post.where(<something>).update({ visible: false })`.
 

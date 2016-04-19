@@ -1,7 +1,6 @@
 Any Eloquent <code><abbr title="Illuminate\Database\Eloquent\Model">Model</abbr></code> can be used with *EloquentJs*.
 
-* Simply implement <code><abbr title="EloquentJs\Model\EloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
-[<i class="tiny external icon" title="View on GitHub"></i>](https://github.com/parsnick/eloquentjs/blob/master/src/Model/AcceptsEloquentJsQueries.php)
+* Simply implement <code>scopeEloquentJs()</code> in the model
 * You can use the <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code> trait to provide the implementation.
 
 For example, a `Post` model might look like:
@@ -11,11 +10,10 @@ For example, a `Post` model might look like:
 
 namespace App;
 
-use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\Model\EloquentJsQueries;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model implements AcceptsEloquentJsQueries
+class Post extends Model
 {
     use EloquentJsQueries;
 

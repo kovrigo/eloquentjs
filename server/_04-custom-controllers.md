@@ -1,6 +1,5 @@
 For a real-world project, you'll likely want to use your own controller logic instead.
-Now that you've set up your models to implement
-<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>,
+Now that you've set up your models with a <code>scopeEloquentJs()</code> method,
 it's trivial to apply an incoming *EloquentJs* query:
 
 ```language-php

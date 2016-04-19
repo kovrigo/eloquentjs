@@ -1,7 +1,7 @@
 
 <ul>
   <li>Simply include the javascript file generated above to start using Eloquent in the browser.</li>
-  <li>You can access models as properties of the `Eloquent` global.</li>
+  <li>You can access models as properties of the <code>Eloquent</code> global.</li>
 </ul>
 
 @highlight('js')

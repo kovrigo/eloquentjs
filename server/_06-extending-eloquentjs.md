@@ -61,7 +61,6 @@ The rest of the package is namespaced as:
 * `Controllerless` is only relevant if you use the `Route::eloquent()` shortcut.
   If not, you can safely disregard this namespace.
 * `Model` contains the central component of the package:
-  * The <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code> interface.
   * The <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
     trait provides the default implementation - it simply fires an `EloquentJsWasCalled` event.
 * `Query` makes up the bulk of the package
@@ -69,7 +68,7 @@ The rest of the package is namespaced as:
   * `Guard` contains the logic for authorising a `Query`
   * `Listeners` respond to the `EloquentJsWasCalled` event
   * `Interpreter` reads the current `Illuminate\Http\Request` and returns a `Query`
-  * `Query` is a plain object representing an *EloquentJs* query (i.e. one originating in javascript)
+  * `Query` is a plain object representing an *EloquentJs* query coming from the browser
 * `ScriptGenerator` is exclusively concerned with the Artisan command that builds your eloquent.js.
 
 You can hook into the package wherever seems most sensible for your needs.
@@ -82,4 +81,4 @@ You can hook into the package wherever seems most sensible for your needs.
   the [$priority](https://laravel.com/api/5.2/Illuminate/Contracts/Events/Dispatcher.html#method_listen)
   argument.
 * You can even bypass the default event-based handling altogether, and provide your own
-  implementation of `AcceptsEloquentJsQueries` without using the package's trait.
+  implementation of `scopeEloquentJs()` without using the package's trait.

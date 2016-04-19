@@ -1,14 +1,12 @@
 #### Edit your model classes to accept queries from EloquentJs
 
-* Implement the `AcceptsEloquentJsQueries` interface.
 * You can use the `EloquentJsQueries` trait to provide the implementation.
 
 ```language-php
-use EloquentJs\Model\AcceptsEloquentJsQueries;
 use EloquentJs\Model\EloquentJsQueries;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model implements AcceptsEloquentJsQueries {
+class Post extends Model {
     use EloquentJsQueries;
 }
 ```

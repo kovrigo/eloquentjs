@@ -13,12 +13,9 @@ But there's more!
 php artisan eloquentjs:generate
 ```
 
-* This scans your app directory for any classes implementing
-<code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
+* This scans your app directory for any classes with the <code>scopeEloquentJs</code> method
 and adds them to your eloquent.js build. Query scopes and date mutators are taken from the model
 class and added to the javascript config.
-
-<br>
 
 * By default all models are included. Pass a comma-separated list to specify which models you want in your eloquent.js build:
 
@@ -31,21 +28,15 @@ php artisan eloquentjs:generate --models=Post,Comment
 ### Endpoints
 
 The most important configuration value for an *EloquentJs* model is the endpoint - that is, where should
-the javascript library send its HTTP requests. Or to put it another way, the URL that the resource
-controller for this model responds to.
+the javascript library send its HTTP requests.
 
-The javascript generator will try to work out the endpoint automatically, in order of precedence:
+The <code>eloquentjs:generate</code> command will try to work out the endpoint automatically, in order of precedence:
 
 1. If the Model returns a value from `getEndpoint()`, this is used as the endpoint.
     <div class="ui basic secondary segment">
       <p>
-        The interface <code><abbr title="EloquentJs\Model\AcceptsEloquentJsQueries">AcceptsEloquentJsQueries</abbr></code>
-        requires a <code>getEndpoint()</code> method.
-      </p>
-      <p>
         The provided <code><abbr title="EloquentJs\Model\EloquentJsQueries">EloquentJsQueries</abbr></code>
-        trait defers to an <code>$endpoint</code> property on the model. You can optionally set this property,
-        or provide your own <code>getEndpoint()</code> implementation, or leave it undefined.
+        trait includes a <code>getEndpoint()</code> method which defers to an <code>$endpoint</code> property on the model. You may optionally set this property, or provide your own <code>getEndpoint()</code> implementation, or leave it undefined.
       </p>
     </div>
 2. If `Route::eloquent($uri, $model)` is used for this model, the generator reads the endpoint from the router.

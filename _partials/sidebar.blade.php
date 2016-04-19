@@ -23,9 +23,9 @@
     @yield('sidebar:server')
   </div>
   
-  <div href="examples" class="item @yield('sidebar:examples:class')">
-    <a href="examples/">Examples</a>
-    @yield('sidebar:examples')
+  <div href="recipes" class="item @yield('sidebar:recipes:class')">
+    <a href="recipes/">Recipes</a>
+    @yield('sidebar:recipes')
   </div>
 
   <a href="//github.com/parsnick/eloquentjs" class="ui big secondary button" title="View on GitHub">
