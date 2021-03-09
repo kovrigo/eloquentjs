@@ -6,7 +6,9 @@ use EloquentJs\ScriptGenerator\Generator;
 use EloquentJs\ScriptGenerator\Model\Inspector;
 use EloquentJs\ScriptGenerator\Model\Metadata;
 use Illuminate\Console\Command as BaseCommand;
-use Illuminate\Filesystem\ClassFinder;
+use App\Trigger as ClassFinder;
+use Illuminate\Support\Str;
+use Symfony\Component\Finder\Finder;
 
 class Command extends BaseCommand
 {
@@ -38,11 +40,6 @@ class Command extends BaseCommand
     protected $generator;
 
     /**
-     * @var ClassFinder
-     */
-    protected $classFinder;
-
-    /**
      * @var Inspector
      */
     protected $inspector;
@@ -55,12 +52,11 @@ class Command extends BaseCommand
      * @param Inspector $inspector
      * @param Generator $generator
      */
-    public function __construct(InputParser $inputParser, ClassFinder $classFinder, Inspector $inspector, Generator $generator)
+    public function __construct(InputParser $inputParser, Inspector $inspector, Generator $generator)
     {
         parent::__construct();
 
         $this->inputParser = $inputParser;
-        $this->classFinder = $classFinder;
         $this->inspector = $inspector;
         $this->generator = $generator;
     }
@@ -119,7 +115,7 @@ class Command extends BaseCommand
     protected function searchAppForModels()
     {
         return array_filter(
-            $this->classFinder->findClasses(app_path()),
+            $this->findClasses(app_path()),
             function($className) {
                 return $this->isEloquentJsModel($className);
             }
@@ -164,9 +160,8 @@ class Command extends BaseCommand
     {
         foreach ($this->laravel['router']->getRoutes() as $route) {
             $action = $route->getAction();
-
             if (isset($action['resource']) and $action['resource'] == $className) {
-                return $route->getUri();
+                return config('app.url') . $route->uri();
             }
         }
 
@@ -209,4 +204,26 @@ class Command extends BaseCommand
     {
         return $this->laravel['files']->put($this->option('output'), $this->generator->build($models)) > 0;
     }
+
+    /**
+     * Find all all classes in the given directory.
+     *
+     * @param  string  $directory
+     * @return array
+     */
+    public function findClasses($directory)
+    {
+        $namespace = app()->getNamespace();
+        $resources = [];
+        foreach ((new Finder)->depth('== 0')->in($directory)->files() as $resource) {
+            $resource = $namespace.str_replace(
+                ['/', '.php'],
+                ['\\', ''],
+                Str::after($resource->getPathname(), app_path().DIRECTORY_SEPARATOR)
+            );
+            $resources[] = $resource;
+        }
+        return $resources;
+    }
+
 }
