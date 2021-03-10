@@ -29,8 +29,7 @@ class Generator
      */
     protected function prefix()
     {
-        return file_get_contents(static::BASE_BUILD)
-            . '(function(E){';
+        return "var _ = require('lodash'); var Eloquent = require('eloquentjs');";
     }
 
     /**
@@ -51,7 +50,7 @@ class Generator
      */
     protected function suffix()
     {
-        return '})(Eloquent)';
+        return ";";
     }
 
     /**
@@ -69,6 +68,6 @@ class Generator
             'relations' => $model->relations,
         ]), JSON_UNESCAPED_SLASHES);
 
-        return "E('{$model->name}', {$config})";
+        return "Eloquent('{$model->name}', {$config})";
     }
 }
