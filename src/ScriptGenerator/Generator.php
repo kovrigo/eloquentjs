@@ -29,7 +29,7 @@ class Generator
      */
     protected function prefix()
     {
-        return "var _ = require('lodash'); var Eloquent = require('eloquentjs');";
+        return "global.token = context.user.api_token; var _ = require('lodash'); var Eloquent = require('eloquentjs');";
     }
 
     /**
